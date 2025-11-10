@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../viewmodels/login_viewmodel.dart';
-import '../models/user.dart';
+import '../../viewmodels/auth/login_viewmodel.dart';
+import '../../models/user.dart';
+import '../../views/dashboard/dashboard_view.dart';
 
 class LoginView extends StatelessWidget {
   final _correoController = TextEditingController();
@@ -43,7 +44,11 @@ class LoginView extends StatelessWidget {
                     _passwordController.text,
                   );
                   if (user != null && context.mounted) {
-                    _navigateToDashboard(context, user);
+                    // _navigateToDashboard(context, user);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const DashboardView()),
+                    );
                   }
                 },
                 child: const Text('Iniciar Sesión'),

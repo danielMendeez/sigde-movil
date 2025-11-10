@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'viewmodels/login_viewmodel.dart';
-import 'views/login_view.dart';
+import 'package:sigde/views/splash_view.dart';
+import 'viewmodels/auth/login_viewmodel.dart';
+import 'views/auth/login_view.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Sistema Estudiantil',
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: LoginView(),
+        home: SplashView(),
       ),
     );
   }

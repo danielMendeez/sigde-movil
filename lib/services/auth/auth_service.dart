@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../models/login_request.dart';
-import '../models/user.dart';
+import '../../models/auth/login_request.dart';
+import '../../models/user.dart';
 
 class AuthService {
   late final Dio _dio;
