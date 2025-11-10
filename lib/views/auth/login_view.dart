@@ -3,6 +3,11 @@ import 'package:provider/provider.dart';
 import '../../viewmodels/auth/login_viewmodel.dart';
 import '../../models/user.dart';
 import '../../views/dashboard/dashboard_view.dart';
+import '../components/layout/form_header.dart';
+import '../components/layout/form_footer.dart';
+import '../components/forms/login_form.dart';
+import '../components/buttons/primary_button.dart';
+import '../components/feedback/error_message.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -22,6 +27,27 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
+  void _onRegister() {
+    // Navegar a la vista de registro
+    print('Navegar a registro');
+    // Navigator.push(context, MaterialPageRoute(builder: (_) => RegisterView()));
+  }
+
+  void _onForgotPassword() {
+    // Navegar a la vista de recuperación de contraseña
+    print('Navegar a recuperación de contraseña');
+  }
+
+  void _onContactSupport() {
+    // Abrir soporte técnico
+    print('Abrir soporte técnico');
+  }
+
+  void _onPrivacyPolicy() {
+    // Abrir política de privacidad
+    print('Abrir política de privacidad');
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<LoginViewModel>(context);
@@ -36,13 +62,10 @@ class _LoginViewState extends State<LoginView> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeaderSection(),
                 const SizedBox(height: 40),
-                _buildEmailField(viewModel),
-                _buildEmailError(viewModel),
-                const SizedBox(height: 16),
-                _buildPasswordField(viewModel),
-                _buildPasswordError(viewModel),
+                _buildHeader(),
+                const SizedBox(height: 40),
+                _buildLoginForm(viewModel),
                 const SizedBox(height: 32),
                 _buildLoginButton(viewModel),
                 _buildViewModelError(viewModel),
@@ -56,182 +79,25 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget _buildHeaderSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.rectangle,
-              border: Border.all(color: Colors.green[300]!, width: 3),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.green[100]!,
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ClipRect(
-              child: Image.asset(
-                'assets/images/icon_256.png',
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'Bienvenido',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.green[800],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Inicia sesión en tu cuenta',
-            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-          ),
-        ],
-      ),
+  Widget _buildHeader() {
+    return const FormHeader(
+      title: 'Bienvenido a SIGDE',
+      subtitle: 'Inicia sesión en tu cuenta',
+      imagePath: 'assets/images/icon_256.png',
+      imageSize: 80,
     );
   }
 
-  Widget _buildEmailField(LoginViewModel viewModel) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.green[50],
-        borderRadius: BorderRadius.circular(12),
-        border: viewModel.correoError != null
-            ? Border.all(color: Colors.red[300]!, width: 1)
-            : null,
-      ),
-      child: TextField(
-        controller: _correoController,
-        decoration: InputDecoration(
-          labelText: 'Correo electrónico',
-          labelStyle: TextStyle(
-            color: viewModel.correoError != null
-                ? Colors.red[700]
-                : Colors.green[700],
-          ),
-          prefixIcon: Icon(
-            Icons.email_outlined,
-            color: viewModel.correoError != null
-                ? Colors.red[600]
-                : Colors.green[600],
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
-        ),
-        style: TextStyle(
-          color: viewModel.correoError != null
-              ? Colors.red[800]
-              : Colors.green[800],
-        ),
-        onChanged: (value) => viewModel.clearCorreoError(),
-      ),
+  Widget _buildLoginForm(LoginViewModel viewModel) {
+    return LoginForm(
+      correoController: _correoController,
+      passwordController: _passwordController,
     );
-  }
-
-  Widget _buildEmailError(LoginViewModel viewModel) {
-    return viewModel.correoError != null
-        ? Padding(
-            padding: const EdgeInsets.only(top: 8, left: 16),
-            child: Text(
-              viewModel.correoError!,
-              style: TextStyle(
-                color: Colors.red[700],
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          )
-        : const SizedBox.shrink();
-  }
-
-  Widget _buildPasswordField(LoginViewModel viewModel) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.green[50],
-        borderRadius: BorderRadius.circular(12),
-        border: viewModel.passwordError != null
-            ? Border.all(color: Colors.red[300]!, width: 1)
-            : null,
-      ),
-      child: TextField(
-        controller: _passwordController,
-        obscureText: true,
-        decoration: InputDecoration(
-          labelText: 'Contraseña',
-          labelStyle: TextStyle(
-            color: viewModel.passwordError != null
-                ? Colors.red[700]
-                : Colors.green[700],
-          ),
-          prefixIcon: Icon(
-            Icons.lock_outline,
-            color: viewModel.passwordError != null
-                ? Colors.red[600]
-                : Colors.green[600],
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 16,
-          ),
-        ),
-        style: TextStyle(
-          color: viewModel.passwordError != null
-              ? Colors.red[800]
-              : Colors.green[800],
-        ),
-        onChanged: (value) => viewModel.clearPasswordError(),
-      ),
-    );
-  }
-
-  Widget _buildPasswordError(LoginViewModel viewModel) {
-    return viewModel.passwordError != null
-        ? Padding(
-            padding: const EdgeInsets.only(top: 8, left: 16),
-            child: Text(
-              viewModel.passwordError!,
-              style: TextStyle(
-                color: Colors.red[700],
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          )
-        : const SizedBox.shrink();
   }
 
   Widget _buildLoginButton(LoginViewModel viewModel) {
-    if (viewModel.isLoading) {
-      return Container(
-        height: 54,
-        decoration: BoxDecoration(
-          color: Colors.green[300],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        ),
-      );
-    }
-
-    return ElevatedButton(
+    return PrimaryButton(
+      text: 'Iniciar Sesión',
       onPressed: () async {
         final user = await viewModel.login(
           _correoController.text,
@@ -245,54 +111,30 @@ class _LoginViewState extends State<LoginView> {
           );
         }
       },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green[600],
-        foregroundColor: Colors.white,
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
-      child: const Text(
-        'Iniciar Sesión',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-      ),
+      isLoading: viewModel.isLoading,
+      backgroundColor: Colors.green[600],
     );
   }
 
   Widget _buildViewModelError(LoginViewModel viewModel) {
     return viewModel.errorMessage != null
-        ? Container(
-            margin: const EdgeInsets.only(top: 20),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.red[50],
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.red[200]!),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.error_outline, color: Colors.red[600]),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    viewModel.errorMessage!,
-                    style: TextStyle(
-                      color: Colors.red[700],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
+        ? ErrorMessage(message: viewModel.errorMessage!)
         : const SizedBox.shrink();
   }
 
   Widget _buildFooter() {
-    return Text(
-      '¿Necesitas ayuda?',
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+    return FormFooter(
+      helpText: '¿No tienes una cuenta?',
+      primaryLink: FooterLink(text: 'Regístrate aquí', onTap: _onRegister),
+      copyrightText: '© 2024 Mi Empresa. Todos los derechos reservados.',
+      versionText: 'v1.0.0',
+      links: [
+        // FooterLink(text: '¿Olvidaste tu contraseña?', onTap: _onForgotPassword),
+        FooterLink(text: '¿Olvidaste tu contraseña?', onTap: _onForgotPassword),
+        FooterLink(text: 'Contactar soporte', onTap: _onContactSupport),
+        FooterLink(text: 'Política de privacidad', onTap: _onPrivacyPolicy),
+      ],
+      showDivider: true,
     );
   }
 }
