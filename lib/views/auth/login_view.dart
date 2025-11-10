@@ -43,11 +43,14 @@ class LoginView extends StatelessWidget {
                     _correoController.text,
                     _passwordController.text,
                   );
+
                   if (user != null && context.mounted) {
                     // _navigateToDashboard(context, user);
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => const DashboardView()),
+                      MaterialPageRoute(
+                        builder: (_) => DashboardView(user: user),
+                      ),
                     );
                   }
                 },
@@ -62,20 +65,6 @@ class LoginView extends StatelessWidget {
                 ),
               ),
           ],
-        ),
-      ),
-    );
-  }
-
-  void _navigateToDashboard(BuildContext context, User user) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => Scaffold(
-          appBar: AppBar(title: Text("Bienvenido, ${user.nombre}!")),
-          body: Center(
-            child: Text('Rol: ${user.tipoUsuario}\nToken: ${user.token}'),
-          ),
         ),
       ),
     );

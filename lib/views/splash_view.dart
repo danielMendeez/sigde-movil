@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import '../services/auth/secure_storage_service.dart';
+import '../models/user.dart';
 import 'auth/login_view.dart';
 import 'dashboard/dashboard_view.dart';
 
@@ -19,12 +21,13 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> _checkAuth() async {
     final token = await SecureStorageService.getToken();
+    final user = await SecureStorageService.getUser();
 
-    if (token != null && token.isNotEmpty) {
-      // Token encontrado → redirige a dashboard
+    if (token != null && token.isNotEmpty && user != null) {
+      // Token y usuario encontrados,redirige a dashboard
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const DashboardView()),
+        MaterialPageRoute(builder: (_) => DashboardView(user: user as User)),
       );
     } else {
       // Si no hay token redirigir a login

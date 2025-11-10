@@ -25,6 +25,7 @@ class LoginViewModel extends ChangeNotifier {
       if (user != null) {
         // Guardar token de sesión
         await SecureStorageService.saveToken(user.token);
+        await SecureStorageService.saveUser(user);
       }
 
       _isLoading = false;
