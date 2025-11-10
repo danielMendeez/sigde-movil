@@ -33,14 +33,20 @@ class AuthService {
         // print(response.data);
         return User.fromJson(response.data);
       } else {
-        throw Exception('No se pudo iniciar sesión.');
+        throw Exception(
+          'No pudimos iniciar tu sesión. Por favor, verifica tus credenciales e intenta nuevamente.',
+        );
       }
     } on DioException catch (e) {
       if (e.response != null) {
-        final msg = e.response?.data['mensaje'] ?? 'Error desconocido';
+        final msg =
+            e.response?.data['mensaje'] ??
+            'Ocurrió un error inesperado. Por favor, intenta más tarde.';
         throw Exception(msg);
       } else {
-        throw Exception('Error de conexión con el servidor.');
+        throw Exception(
+          'No podemos conectarnos con el servidor en este momento. Verifica tu conexión a internet e intenta nuevamente.',
+        );
       }
     }
   }

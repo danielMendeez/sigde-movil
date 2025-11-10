@@ -9,7 +9,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Cargar variables de entorno
-  await dotenv.load();
+  await dotenv.load(fileName: ".env");
 
   runApp(const MyApp());
 }

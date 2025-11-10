@@ -24,7 +24,7 @@ class _SplashViewState extends State<SplashView> {
     final user = await SecureStorageService.getUser();
 
     if (token != null && token.isNotEmpty && user != null) {
-      // Token y usuario encontrados,redirige a dashboard
+      // Token y usuario encontrados, redirigir a dashboard
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => DashboardView(user: user as User)),
