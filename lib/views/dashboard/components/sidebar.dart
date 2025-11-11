@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../viewmodels/dashboard_viewmodel.dart';
 import '../../../models/user.dart';
 import '../../../services/auth/secure_storage_service.dart';
-import '../../auth/login_view.dart';
 
 class Sidebar extends StatelessWidget {
   final User user;
@@ -31,7 +31,8 @@ class Sidebar extends StatelessWidget {
             selected: selectedIndex == 0,
             onTap: () {
               viewModel.changeTab(0);
-              Navigator.pop(context);
+              // Usar go_router para cerrar el drawer
+              context.pop();
             },
           ),
           ListTile(
@@ -40,7 +41,7 @@ class Sidebar extends StatelessWidget {
             selected: selectedIndex == 1,
             onTap: () {
               viewModel.changeTab(1);
-              Navigator.pop(context);
+              context.pop();
             },
           ),
           ListTile(
@@ -49,7 +50,7 @@ class Sidebar extends StatelessWidget {
             selected: selectedIndex == 2,
             onTap: () {
               viewModel.changeTab(2);
-              Navigator.pop(context);
+              context.pop();
             },
           ),
           const Spacer(),
@@ -61,19 +62,18 @@ class Sidebar extends StatelessWidget {
               style: TextStyle(color: Colors.red),
             ),
             onTap: () async {
-              await SecureStorageService.deleteAll();
-
-              if (context.mounted) {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => LoginView()),
-                  (route) => false,
-                );
-              }
+              await _logout(context);
             },
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    await SecureStorageService.deleteAll();
+
+    // Usar go_router para redireccionar al login
+    context.go('/login');
   }
 }

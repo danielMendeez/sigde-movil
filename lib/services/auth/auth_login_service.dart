@@ -3,10 +3,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../models/auth/login_request.dart';
 import '../../models/user.dart';
 
-class AuthService {
+class AuthLoginService {
   late final Dio _dio;
 
-  AuthService() {
+  AuthLoginService() {
     final baseUrl = dotenv.env['API_BASE_URL'] ?? '';
 
     _dio = Dio(

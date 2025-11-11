@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/auth/login_viewmodel.dart';
 import '../../models/user.dart';
@@ -10,7 +11,9 @@ import '../components/buttons/primary_button.dart';
 import '../components/feedback/error_message.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+  final String? successMessage;
+
+  const LoginView({Key? key, this.successMessage}) : super(key: key);
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -27,10 +30,28 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.successMessage != null && widget.successMessage!.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(widget.successMessage!),
+              backgroundColor: Colors.green[600],
+            ),
+          );
+        }
+      });
+    }
+  }
+
   void _onRegister() {
     // Navegar a la vista de registro
-    print('Navegar a registro');
-    // Navigator.push(context, MaterialPageRoute(builder: (_) => RegisterView()));
+    // print('Navegar a registro');
+    context.go('/register');
   }
 
   void _onForgotPassword() {
@@ -105,10 +126,7 @@ class _LoginViewState extends State<LoginView> {
         );
 
         if (user != null && context.mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => DashboardView(user: user)),
-          );
+          context.go('/dashboard', extra: user);
         }
       },
       isLoading: viewModel.isLoading,

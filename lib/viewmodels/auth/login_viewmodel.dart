@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import '../../models/auth/login_request.dart';
 import '../../models/user.dart';
-import '../../services/auth/auth_service.dart';
+import '../../services/auth/auth_login_service.dart';
 import '../../services/auth/secure_storage_service.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  final AuthService _authService = AuthService();
+  final AuthLoginService _authLoginService = AuthLoginService();
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -85,7 +85,7 @@ class LoginViewModel extends ChangeNotifier {
 
     try {
       final loginRequest = LoginRequest(correo: correo, password: password);
-      final user = await _authService.login(loginRequest);
+      final user = await _authLoginService.login(loginRequest);
 
       if (user != null) {
         // Guardar token de sesión

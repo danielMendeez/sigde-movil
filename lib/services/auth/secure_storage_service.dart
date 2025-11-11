@@ -26,6 +26,12 @@ class SecureStorageService {
     return await _storage.read(key: _keyToken);
   }
 
+  // Verificar si hay token
+  static Future<bool> hasToken() async {
+    final token = await _storage.read(key: _keyToken);
+    return token != null && token.isNotEmpty;
+  }
+
   // Eliminar token (logout)
   static Future<void> deleteToken() async {
     await _storage.delete(key: _keyToken);

@@ -33,7 +33,7 @@ class User {
       correo: userData['correo'] ?? '',
       telefono: userData['telefono'] ?? '',
       tipoUsuario: userData['tipo_usuario'] ?? '',
-      token: userData['token'],
+      token: (userData['token'] ?? '').toString(),
     );
   }
 }
