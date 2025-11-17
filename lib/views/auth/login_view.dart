@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/auth/login_viewmodel.dart';
-import '../../models/user.dart';
-import '../../views/dashboard/dashboard_view.dart';
+import '../../viewmodels/auth/auth_viewmodel.dart';
 import '../components/layout/form_header.dart';
 import '../components/layout/form_footer.dart';
 import '../components/forms/login_form.dart';
@@ -120,12 +119,14 @@ class _LoginViewState extends State<LoginView> {
     return PrimaryButton(
       text: 'Iniciar Sesión',
       onPressed: () async {
+        final authViewModel = context.read<AuthViewModel>();
         final user = await viewModel.login(
           _correoController.text,
           _passwordController.text,
         );
 
         if (user != null && context.mounted) {
+          await authViewModel.setUser(user);
           context.go('/dashboard', extra: user);
         }
       },

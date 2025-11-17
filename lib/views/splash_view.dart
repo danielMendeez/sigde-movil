@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../services/auth/secure_storage_service.dart';
+import 'package:provider/provider.dart';
+import '../viewmodels/auth/auth_viewmodel.dart';
 import '../services/auth/biometric_auth_service.dart';
 
 class SplashView extends StatefulWidget {
@@ -20,26 +21,18 @@ class _SplashViewState extends State<SplashView> {
   Future<void> _checkAuthStatus() async {
     await Future.delayed(const Duration(milliseconds: 600));
 
-    final hasToken = await SecureStorageService.hasToken();
+    final authViewModel = context.read<AuthViewModel>();
 
-    if (!hasToken) {
-      if (mounted) context.go('/login');
-      return;
-    }
-
-    final user = await SecureStorageService.getUser();
-    if (user == null) {
-      print('⚠️ No se pudo recuperar el usuario, redirigiendo al login...');
-      if (mounted) context.go('/login');
-      return;
+    // Esperar a que el AuthViewModel se inicialice
+    while (!authViewModel.isInitialized) {
+      await Future.delayed(const Duration(milliseconds: 100));
     }
 
     final isAuthenticated = await BiometricAuthService.authenticateUser();
-
     if (!mounted) return;
 
-    if (isAuthenticated) {
-      context.go('/dashboard', extra: user);
+    if (authViewModel.isLoggedIn && isAuthenticated) {
+      context.go('/dashboard');
     } else {
       context.go('/login');
     }

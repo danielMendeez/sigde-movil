@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sigde/views/splash_view.dart';
 import 'viewmodels/auth/login_viewmodel.dart';
 import 'viewmodels/auth/register_viewmodel.dart';
+import 'viewmodels/auth/auth_viewmodel.dart';
 import 'viewmodels/dashboard_viewmodel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -25,11 +26,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => AuthViewModel()..initialize()),
         ChangeNotifierProvider(create: (_) => DashboardViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
       ],
       child: MaterialApp.router(
-        title: 'Mi Aplicación',
+        title: 'SIGDE',
         theme: ThemeData(
           primarySwatch: Colors.green,
           visualDensity: VisualDensity.adaptivePlatformDensity,

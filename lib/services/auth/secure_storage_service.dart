@@ -15,43 +15,8 @@ class SecureStorageService {
 
   // Guardar usuario
   static Future<void> saveUser(User user) async {
-    final jsonString = jsonEncode(user.toJson());
-    try {
-      await _storage.write(key: _keyUser, value: jsonString);
-      final data = jsonDecode(jsonString);
-      print('✅ user_data guardado: $data');
-    } catch (e) {
-      print('❌ Error al guardar usuario: $e');
-      return null;
-    }
-  }
-
-  // Obtener usuario
-  // static Future<User?> getUser() async {
-  //   final jsonString = await _storage.read(key: _keyUser);
-  //   if (jsonString == null) return null;
-  //   try {
-  //     final data = jsonDecode(jsonString);
-  //     return User.fromJson(data);
-  //   } catch (e) {
-  //     print('Error al decodificar usuario: $e');
-  //     return null;
-  //   }
-  // }
-  static Future<User?> getUser() async {
-    final jsonString = await _storage.read(key: _keyUser);
-    if (jsonString == null) {
-      print('⚠️ user_data está vacío');
-      return null;
-    }
-    try {
-      final data = jsonDecode(jsonString);
-      print('✅ user_data recuperado: $data');
-      return User.fromJson(data);
-    } catch (e) {
-      print('❌ Error al decodificar usuario: $e');
-      return null;
-    }
+    final userJson = jsonEncode(user.toJson());
+    await _storage.write(key: _keyUser, value: userJson);
   }
 
   // Obtener token
@@ -59,10 +24,30 @@ class SecureStorageService {
     return await _storage.read(key: _keyToken);
   }
 
+  // Obtener usuario
+  static Future<User?> getUser() async {
+    final jsonString = await _storage.read(key: _keyUser);
+    if (jsonString == null) {
+      return null;
+    }
+    try {
+      final userData = jsonDecode(jsonString);
+      return User.fromJson(userData);
+    } catch (e) {
+      return null;
+    }
+  }
+
   // Verificar si hay token
   static Future<bool> hasToken() async {
     final token = await _storage.read(key: _keyToken);
     return token != null && token.isNotEmpty;
+  }
+
+  // Verificar si hay datos de usuario
+  static Future<bool> hasDataUser() async {
+    final user = await _storage.read(key: _keyUser);
+    return user != null;
   }
 
   // Eliminar token (logout)

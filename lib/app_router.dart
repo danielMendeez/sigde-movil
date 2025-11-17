@@ -3,20 +3,30 @@ import 'package:flutter/material.dart';
 import 'services/auth/secure_storage_service.dart';
 import 'views/auth/login_view.dart';
 import 'views/auth/register_view.dart';
+import 'viewmodels/auth/auth_viewmodel.dart';
 import 'views/dashboard/dashboard_view.dart';
 import 'views/splash_view.dart';
 import 'models/user.dart';
+import 'package:provider/provider.dart';
 
 class AppRouter {
   static Future<String?> _redirect(
     BuildContext context,
     GoRouterState state,
   ) async {
+    final authViewModel = context.read<AuthViewModel>();
+
+    if (!authViewModel.isInitialized) {
+      return '/splash';
+    }
+
     if (state.matchedLocation == '/splash') {
       return null;
     }
 
     final isLoggedIn = await SecureStorageService.hasToken();
+    final isUserData = await SecureStorageService.hasDataUser();
+
     final goingToAuth =
         state.matchedLocation == '/login' ||
         state.matchedLocation == '/register';
@@ -26,8 +36,7 @@ class AppRouter {
     }
 
     if (isLoggedIn && goingToAuth) {
-      final user = await SecureStorageService.getUser();
-      if (user != null) {
+      if (isUserData) {
         return '/dashboard';
       }
     }
@@ -58,22 +67,19 @@ class AppRouter {
         name: 'register',
         builder: (context, state) => const RegisterView(),
       ),
-      // GoRoute(
-      //   path: '/dashboard',
-      //   name: 'dashboard',
-      //   builder: (context, state) {
-      //     final user = state.extra as User?;
-      //     return DashboardView(user: user!);
-      //   },
-      // ),
       GoRoute(
         path: '/dashboard',
         name: 'dashboard',
         builder: (context, state) {
-          final user = state.extra as User?;
+          final authViewModel = context.read<AuthViewModel>();
+          final user = authViewModel.currentUser;
+
           if (user == null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go('/login');
+            });
             return const Scaffold(
-              body: Center(child: Text('Error: usuario no encontrado')),
+              body: Center(child: CircularProgressIndicator()),
             );
           }
           return DashboardView(user: user);
