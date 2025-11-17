@@ -36,4 +36,16 @@ class User {
       token: (userData['token'] ?? '').toString(),
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'nombre': nombre,
+    'apellido_paterno': apellidoPaterno,
+    'apellido_materno': apellidoMaterno,
+    'curp': curp,
+    'correo': correo,
+    'telefono': telefono,
+    'tipo_usuario': tipoUsuario,
+    'token': token,
+  };
 }

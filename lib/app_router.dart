@@ -4,6 +4,7 @@ import 'services/auth/secure_storage_service.dart';
 import 'views/auth/login_view.dart';
 import 'views/auth/register_view.dart';
 import 'views/dashboard/dashboard_view.dart';
+import 'views/splash_view.dart';
 import 'models/user.dart';
 
 class AppRouter {
@@ -11,6 +12,10 @@ class AppRouter {
     BuildContext context,
     GoRouterState state,
   ) async {
+    if (state.matchedLocation == '/splash') {
+      return null;
+    }
+
     final isLoggedIn = await SecureStorageService.hasToken();
     final goingToAuth =
         state.matchedLocation == '/login' ||
@@ -21,14 +26,19 @@ class AppRouter {
     }
 
     if (isLoggedIn && goingToAuth) {
-      return '/dashboard';
+      final user = await SecureStorageService.getUser();
+      if (user != null) {
+        return '/dashboard';
+      }
     }
 
     return null;
   }
 
   static final GoRouter router = GoRouter(
+    initialLocation: '/splash',
     routes: [
+      GoRoute(path: '/splash', builder: (context, state) => const SplashView()),
       GoRoute(
         path: '/',
         name: 'home',
@@ -48,12 +58,25 @@ class AppRouter {
         name: 'register',
         builder: (context, state) => const RegisterView(),
       ),
+      // GoRoute(
+      //   path: '/dashboard',
+      //   name: 'dashboard',
+      //   builder: (context, state) {
+      //     final user = state.extra as User?;
+      //     return DashboardView(user: user!);
+      //   },
+      // ),
       GoRoute(
         path: '/dashboard',
         name: 'dashboard',
         builder: (context, state) {
           final user = state.extra as User?;
-          return DashboardView(user: user!);
+          if (user == null) {
+            return const Scaffold(
+              body: Center(child: Text('Error: usuario no encontrado')),
+            );
+          }
+          return DashboardView(user: user);
         },
       ),
     ],

@@ -7,7 +7,7 @@ class AuthRegisterService {
   late final Dio _dio;
 
   AuthRegisterService() {
-    final baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8000/api';
+    final baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8001/api';
 
     _dio = Dio(
       BaseOptions(

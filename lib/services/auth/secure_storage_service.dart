@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../models/user.dart';
 
 class SecureStorageService {
   static const _storage = FlutterSecureStorage();
@@ -12,13 +14,44 @@ class SecureStorageService {
   }
 
   // Guardar usuario
-  static Future<void> saveUser(Object user) async {
-    await _storage.write(key: _keyUser, value: user.toString());
+  static Future<void> saveUser(User user) async {
+    final jsonString = jsonEncode(user.toJson());
+    try {
+      await _storage.write(key: _keyUser, value: jsonString);
+      final data = jsonDecode(jsonString);
+      print('✅ user_data guardado: $data');
+    } catch (e) {
+      print('❌ Error al guardar usuario: $e');
+      return null;
+    }
   }
 
   // Obtener usuario
-  static Future<Object?> getUser() async {
-    return await _storage.read(key: _keyUser);
+  // static Future<User?> getUser() async {
+  //   final jsonString = await _storage.read(key: _keyUser);
+  //   if (jsonString == null) return null;
+  //   try {
+  //     final data = jsonDecode(jsonString);
+  //     return User.fromJson(data);
+  //   } catch (e) {
+  //     print('Error al decodificar usuario: $e');
+  //     return null;
+  //   }
+  // }
+  static Future<User?> getUser() async {
+    final jsonString = await _storage.read(key: _keyUser);
+    if (jsonString == null) {
+      print('⚠️ user_data está vacío');
+      return null;
+    }
+    try {
+      final data = jsonDecode(jsonString);
+      print('✅ user_data recuperado: $data');
+      return User.fromJson(data);
+    } catch (e) {
+      print('❌ Error al decodificar usuario: $e');
+      return null;
+    }
   }
 
   // Obtener token
