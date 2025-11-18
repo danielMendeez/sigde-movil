@@ -5,19 +5,22 @@ import '../../services/auth/secure_storage_service.dart';
 class AuthViewModel extends ChangeNotifier {
   User? _currentUser;
   bool _isInitialized = false;
+  bool _biometricEnabled = false;
 
   User? get currentUser => _currentUser;
   bool get isInitialized => _isInitialized;
   bool get isLoggedIn => _currentUser != null;
+  bool get biometricEnabled => _biometricEnabled;
 
   Future<void> initialize() async {
     try {
       final hasToken = await SecureStorageService.hasToken();
+
       if (hasToken) {
         _currentUser = await SecureStorageService.getUser();
       }
-    } catch (e) {
-      // Handle errors if necessary
+
+      _biometricEnabled = await SecureStorageService.isBiometricEnabled();
     } finally {
       _isInitialized = true;
       notifyListeners();
@@ -33,6 +36,17 @@ class AuthViewModel extends ChangeNotifier {
   Future<void> logout() async {
     _currentUser = null;
     await SecureStorageService.deleteAll();
+    notifyListeners();
+  }
+
+  Future<void> loadBiometricPreference() async {
+    _biometricEnabled = await SecureStorageService.isBiometricEnabled();
+    notifyListeners();
+  }
+
+  Future<void> setBiometricEnabled(bool enabled) async {
+    _biometricEnabled = enabled;
+    await SecureStorageService.setBiometricEnabled(enabled);
     notifyListeners();
   }
 }

@@ -7,6 +7,7 @@ class SecureStorageService {
 
   static const _keyToken = 'jwt_token';
   static const _keyUser = 'user_data';
+  static const _keyBiometricEnabled = 'biometric_enabled';
 
   // Guardar token
   static Future<void> saveToken(String token) async {
@@ -53,6 +54,17 @@ class SecureStorageService {
   // Eliminar token (logout)
   static Future<void> deleteToken() async {
     await _storage.delete(key: _keyToken);
+  }
+
+  // Guardar si el usuario activó biometría
+  static Future<void> setBiometricEnabled(bool enabled) async {
+    await _storage.write(key: _keyBiometricEnabled, value: enabled.toString());
+  }
+
+  // Leer si el usuario ha activado biometría
+  static Future<bool> isBiometricEnabled() async {
+    final value = await _storage.read(key: _keyBiometricEnabled);
+    return value == 'true';
   }
 
   // Eliminar todos los datos almacenados

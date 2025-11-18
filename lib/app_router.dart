@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'services/auth/secure_storage_service.dart';
 import 'views/auth/login_view.dart';
 import 'views/auth/register_view.dart';
-import 'viewmodels/auth/auth_viewmodel.dart';
+import 'views/auth/biometric_lock_view.dart';
 import 'views/dashboard/dashboard_view.dart';
 import 'views/splash_view.dart';
-import 'models/user.dart';
+import 'viewmodels/auth/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class AppRouter {
@@ -14,30 +14,26 @@ class AppRouter {
     BuildContext context,
     GoRouterState state,
   ) async {
-    final authViewModel = context.read<AuthViewModel>();
+    final auth = context.read<AuthViewModel>();
 
-    if (!authViewModel.isInitialized) {
-      return '/splash';
-    }
+    if (!auth.isInitialized) return '/splash';
 
-    if (state.matchedLocation == '/splash') {
-      return null;
-    }
-
-    final isLoggedIn = await SecureStorageService.hasToken();
-    final isUserData = await SecureStorageService.hasDataUser();
+    final loggedIn = auth.isLoggedIn;
+    final biometricEnabled = auth.biometricEnabled;
 
     final goingToAuth =
         state.matchedLocation == '/login' ||
         state.matchedLocation == '/register';
 
-    if (!isLoggedIn && !goingToAuth) {
+    // No logueado → login
+    if (!loggedIn && !goingToAuth) {
       return '/login';
     }
 
-    if (isLoggedIn && goingToAuth) {
-      if (isUserData) {
-        return '/dashboard';
+    // Logueado y biometría activada
+    if (loggedIn && biometricEnabled) {
+      if (state.matchedLocation != '/biometric') {
+        return '/biometric';
       }
     }
 
@@ -48,6 +44,12 @@ class AppRouter {
     initialLocation: '/splash',
     routes: [
       GoRoute(path: '/splash', builder: (context, state) => const SplashView()),
+      GoRoute(
+        path: '/biometric',
+        name: 'biometric',
+        builder: (context, state) => const BiometricLockView(),
+      ),
+
       GoRoute(
         path: '/',
         name: 'home',
