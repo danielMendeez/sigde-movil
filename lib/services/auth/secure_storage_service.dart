@@ -51,7 +51,7 @@ class SecureStorageService {
     return user != null;
   }
 
-  // Eliminar token (logout)
+  // Eliminar token
   static Future<void> deleteToken() async {
     await _storage.delete(key: _keyToken);
   }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/auth/login_viewmodel.dart';
 import '../../viewmodels/auth/auth_viewmodel.dart';
+import '../../services/auth/secure_storage_service.dart';
 import '../components/layout/form_header.dart';
 import '../components/layout/form_footer.dart';
 import '../components/forms/login_form.dart';
@@ -127,6 +128,34 @@ class _LoginViewState extends State<LoginView> {
 
         if (user != null && context.mounted) {
           await authViewModel.setUser(user);
+
+          // Después de login exitoso, preguntar si desea activar biometría
+          final wantsBiometric = await showDialog<bool>(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: const Text("Activar inicio con huella/rostro"),
+              content: const Text(
+                "¿Deseas habilitar el inicio de sesión biométrico "
+                "para futuras veces?",
+              ),
+              actions: [
+                TextButton(
+                  child: const Text("No"),
+                  onPressed: () => Navigator.pop(context, false),
+                ),
+                TextButton(
+                  child: const Text("Sí"),
+                  onPressed: () => Navigator.pop(context, true),
+                ),
+              ],
+            ),
+          );
+
+          // Si presiona "Sí", guardamos la preferencia
+          if (wantsBiometric == true) {
+            await SecureStorageService.setBiometricEnabled(true);
+          }
+
           context.go('/dashboard', extra: user);
         }
       },

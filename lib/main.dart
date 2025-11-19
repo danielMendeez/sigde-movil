@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'app_router.dart';
 import 'package:provider/provider.dart';
-import 'package:sigde/views/splash_view.dart';
 import 'viewmodels/auth/login_viewmodel.dart';
 import 'viewmodels/auth/register_viewmodel.dart';
 import 'viewmodels/auth/auth_viewmodel.dart';

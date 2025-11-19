@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'services/auth/secure_storage_service.dart';
 import 'views/auth/login_view.dart';
 import 'views/auth/register_view.dart';
 import 'views/auth/biometric_lock_view.dart';
@@ -16,25 +15,36 @@ class AppRouter {
   ) async {
     final auth = context.read<AuthViewModel>();
 
+    // Esperar inicialización antes de redirigir
     if (!auth.isInitialized) return '/splash';
 
     final loggedIn = auth.isLoggedIn;
     final biometricEnabled = auth.biometricEnabled;
+    final biometricPassed = auth.biometricAuthenticated;
 
     final goingToAuth =
         state.matchedLocation == '/login' ||
         state.matchedLocation == '/register';
 
-    // No logueado → login
-    if (!loggedIn && !goingToAuth) {
-      return '/login';
+    // Si no está logueado ir a login
+    if (!loggedIn) {
+      if (!goingToAuth) return '/login';
+      return null;
     }
 
-    // Logueado y biometría activada
-    if (loggedIn && biometricEnabled) {
-      if (state.matchedLocation != '/biometric') {
-        return '/biometric';
-      }
+    // Si está logueado pero biometría no está activa permitir dashboard
+    if (!biometricEnabled) return null;
+
+    // Si está logueado y biometría activada pero ya pasó la biometría en esta sesión permitir dashboard
+    if (biometricPassed) return null;
+
+    // Si está logueado y biometría activada y no ha pasado en esta sesión:
+    // permitir que el usuario vaya a la pantalla de login/register (fallback),
+    // pero para cualquier otra ruta forzamos /biometric.
+    if (goingToAuth) return null;
+
+    if (state.matchedLocation != '/biometric') {
+      return '/biometric';
     }
 
     return null;

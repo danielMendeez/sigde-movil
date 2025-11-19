@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../viewmodels/dashboard_viewmodel.dart';
 import '../../../models/user.dart';
-import '../../../services/auth/secure_storage_service.dart';
+import '../../../viewmodels/auth/auth_viewmodel.dart';
 
 class Sidebar extends StatelessWidget {
   final User user;
@@ -31,7 +31,6 @@ class Sidebar extends StatelessWidget {
             selected: selectedIndex == 0,
             onTap: () {
               viewModel.changeTab(0);
-              // Usar go_router para cerrar el drawer
               context.pop();
             },
           ),
@@ -71,7 +70,8 @@ class Sidebar extends StatelessWidget {
   }
 
   Future<void> _logout(BuildContext context) async {
-    await SecureStorageService.deleteAll();
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    await authViewModel.logout();
 
     // Usar go_router para redireccionar al login
     context.go('/login');

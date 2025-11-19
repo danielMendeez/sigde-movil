@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../services/auth/biometric_auth_service.dart';
+import '../../viewmodels/auth/auth_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class BiometricLockView extends StatefulWidget {
   const BiometricLockView({super.key});
@@ -13,18 +15,26 @@ class _BiometricLockViewState extends State<BiometricLockView> {
   @override
   void initState() {
     super.initState();
-    _authFlow();
+    _auth();
   }
 
-  Future<void> _authFlow() async {
-    final result = await BiometricAuthService.authenticateUser();
+  Future<void> _auth() async {
+    final authViewModel = context.read<AuthViewModel>();
+    final ok = await BiometricAuthService.authenticateUser();
 
     if (!mounted) return;
 
-    if (result) {
+    if (ok) {
+      // marcar que la biometría ya pasó para esta sesión
+      authViewModel.setBiometricAuthenticated(true);
+
+      // navegar al dashboard
       context.go('/dashboard');
     } else {
-      // Si falla, lo regresamos al login
+      // marcar que no pasó
+      authViewModel.setBiometricAuthenticated(false);
+
+      // navegar al login, redirect decide si mostrar login o splash screen
       context.go('/login');
     }
   }
