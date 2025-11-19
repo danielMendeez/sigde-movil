@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../viewmodels/dashboard_viewmodel.dart';
-import 'components/sidebar.dart';
+import 'package:sigde/viewmodels/dashboard_viewmodel.dart';
+import 'components/sidebar/sidebar.dart';
 import 'components/home_content.dart';
 import 'components/profile_content.dart';
 import 'components/settings_content.dart';
-import '../../models/user.dart';
+import 'package:sigde/models/user.dart';
 
 class DashboardView extends StatefulWidget {
   final User user;
@@ -66,6 +66,8 @@ class _DashboardViewState extends State<DashboardView> {
           key: const ValueKey('settings'),
           user: widget.user,
         );
+      // case 3: // Gestión de usuarios (admin)
+      //   return UsersContent(key: const ValueKey('users'), user: widget.user);
       default:
         return HomeContent(
           key: const ValueKey('home-default'),
