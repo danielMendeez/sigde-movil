@@ -6,6 +6,7 @@ import 'components/home_content.dart';
 import 'components/profile_content.dart';
 import 'components/settings_content.dart';
 import 'package:sigde/models/user.dart';
+import 'package:sigde/views/estadia/listar_estadias_view.dart';
 
 class DashboardView extends StatefulWidget {
   final User user;
@@ -66,8 +67,11 @@ class _DashboardViewState extends State<DashboardView> {
           key: const ValueKey('settings'),
           user: widget.user,
         );
-      // case 3: // Gestión de usuarios (admin)
-      //   return UsersContent(key: const ValueKey('users'), user: widget.user);
+      case 3:
+        return ListarEstadiasView(
+          key: const ValueKey('estadias'),
+          token: widget.user.token,
+        );
       default:
         return HomeContent(
           key: const ValueKey('home-default'),

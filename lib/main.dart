@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'app_router.dart';
 import 'package:provider/provider.dart';
 import 'viewmodels/auth/login_viewmodel.dart';
 import 'viewmodels/auth/register_viewmodel.dart';
 import 'viewmodels/auth/auth_viewmodel.dart';
 import 'viewmodels/dashboard_viewmodel.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'viewmodels/estadia/listar_estadias_viewmodel.dart';
+import 'locator.dart'; // Asegúrate de importar el locator
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Cargar variables de entorno
   await dotenv.load(fileName: ".env");
+
+  // Inicializar GetIt
+  setupDependencies();
 
   runApp(const MyApp());
 }
@@ -27,6 +32,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthViewModel()..initialize()),
         ChangeNotifierProvider(create: (_) => DashboardViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
+        // Usar GetIt para proveer el ListarEstadiasViewModel
+        ChangeNotifierProvider(
+          create: (context) => getIt<ListarEstadiasViewModel>(),
+        ),
       ],
       child: MaterialApp.router(
         title: 'SIGDE',

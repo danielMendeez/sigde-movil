@@ -1,0 +1,39 @@
+import 'package:sigde/models/estadia/estadia.dart';
+import 'package:sigde/models/estadia/listar_estadias_request.dart';
+import 'package:sigde/services/api_client.dart';
+import 'estadia_service.dart';
+
+class EstadiaException implements Exception {
+  final String message;
+  EstadiaException(this.message);
+
+  @override
+  String toString() => 'EstadiaException: $message';
+}
+
+class EstadiaServiceImplementation implements EstadiaService {
+  final ApiClient _apiClient;
+
+  EstadiaServiceImplementation(this._apiClient);
+
+  @override
+  Future<List<Estadia>> listarEstadias(ListarEstadiasRequest request) async {
+    try {
+      final response = await _apiClient.post(
+        '/estadia/listaEstadias',
+        data: request.toJson(),
+      );
+
+      if (response.containsKey('estadias') && response['estadias'] is List) {
+        final List<dynamic> estadiasJson = response['estadias'];
+        return estadiasJson.map((json) => Estadia.fromJson(json)).toList();
+      } else {
+        throw EstadiaException(
+          'Formato de respuesta inválido: no se encontró el array "estadias"',
+        );
+      }
+    } catch (e) {
+      throw EstadiaException('Error al listar estadías: ${e.toString()}');
+    }
+  }
+}

@@ -31,9 +31,9 @@ class AdminSidebarOptions extends StatelessWidget {
         ),
         _buildListTile(
           context: context,
-          index: 3, // Gestión de usuarios
-          icon: Icons.people,
-          title: 'Usuarios',
+          index: 3,
+          icon: Icons.document_scanner,
+          title: 'Estadias',
         ),
         // Puedes agregar más opciones específicas de admin
       ],
