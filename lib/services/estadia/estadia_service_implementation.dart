@@ -26,7 +26,12 @@ class EstadiaServiceImplementation implements EstadiaService {
 
       if (response.containsKey('estadias') && response['estadias'] is List) {
         final List<dynamic> estadiasJson = response['estadias'];
-        return estadiasJson.map((json) => Estadia.fromJson(json)).toList();
+
+        final estadias = estadiasJson.map((json) {
+          return Estadia.fromJson(json);
+        }).toList();
+
+        return estadias;
       } else {
         throw EstadiaException(
           'Formato de respuesta inválido: no se encontró el array "estadias"',

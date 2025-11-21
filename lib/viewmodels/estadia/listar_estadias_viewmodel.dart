@@ -25,6 +25,7 @@ class ListarEstadiasViewModel with ChangeNotifier {
     try {
       final request = ListarEstadiasRequest(token: token);
       _estadias = await _estadiaService.listarEstadias(request);
+      _errorMessage = '';
     } catch (e) {
       _errorMessage = e.toString();
       _estadias = [];
