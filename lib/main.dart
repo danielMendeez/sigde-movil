@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'locator.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sigde/viewmodels/estadia/registrar_estadia_viewmodel.dart';
 import 'app_router.dart';
@@ -8,7 +9,7 @@ import 'viewmodels/auth/register_viewmodel.dart';
 import 'viewmodels/auth/auth_viewmodel.dart';
 import 'viewmodels/dashboard_viewmodel.dart';
 import 'viewmodels/estadia/listar_estadias_viewmodel.dart';
-import 'locator.dart'; // Asegúrate de importar el locator
+import 'viewmodels/estadia/ver_estadia_viewmodel.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => getIt<RegistrarEstadiaViewModel>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => getIt<VerEstadiaViewModel>(),
         ),
       ],
       child: MaterialApp.router(

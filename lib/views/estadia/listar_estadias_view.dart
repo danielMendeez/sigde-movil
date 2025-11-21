@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sigde/models/estadia/estadia.dart';
 import 'package:sigde/viewmodels/estadia/listar_estadias_viewmodel.dart';
+import 'package:sigde/views/estadia/ver_estadia_view.dart';
 
 class ListarEstadiasView extends StatefulWidget {
   final String token;
@@ -90,7 +91,21 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
             itemCount: viewModel.estadias.length,
             itemBuilder: (context, index) {
               final estadia = viewModel.estadias[index];
-              return _EstadiaCard(estadia: estadia);
+              return _EstadiaCard(
+                estadia: estadia,
+                token: widget.token,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VerEstadiaView(
+                        token: widget.token,
+                        estadiaId: estadia.id,
+                      ),
+                    ),
+                  );
+                },
+              );
             },
           );
         },
@@ -101,58 +116,77 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
 
 class _EstadiaCard extends StatelessWidget {
   final Estadia estadia;
+  final String token; // Agregar token como parámetro
+  final VoidCallback onTap; // Callback para el tap
 
-  const _EstadiaCard({Key? key, required this.estadia}) : super(key: key);
+  const _EstadiaCard({
+    Key? key,
+    required this.estadia,
+    required this.token,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
       margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              estadia.proyectoNombre,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            _InfoRow(
-              icon: Icons.person,
-              text: 'Asesor: ${estadia.asesorExterno}',
-            ),
-            _InfoRow(
-              icon: Icons.calendar_today,
-              text: 'Duración: ${estadia.duracionSemanas} semanas',
-            ),
-            _InfoRow(
-              icon: Icons.date_range,
-              text: 'Inicio: ${_formatDate(estadia.fechaInicio)}',
-            ),
-            _InfoRow(
-              icon: Icons.date_range,
-              text: 'Fin: ${_formatDate(estadia.fechaFin)}',
-            ),
-            _InfoRow(icon: Icons.help_outline, text: 'Apoyo: ${estadia.apoyo}'),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(
-                color: _getStatusColor(estadia.estatus),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                estadia.estatus,
+      child: InkWell(
+        onTap: onTap, // Usar el callback
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                estadia.proyectoNombre,
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              _InfoRow(
+                icon: Icons.person,
+                text: 'Asesor: ${estadia.asesorExterno}',
+              ),
+              _InfoRow(
+                icon: Icons.calendar_today,
+                text: 'Duración: ${estadia.duracionSemanas} semanas',
+              ),
+              _InfoRow(
+                icon: Icons.date_range,
+                text: 'Inicio: ${_formatDate(estadia.fechaInicio)}',
+              ),
+              _InfoRow(
+                icon: Icons.date_range,
+                text: 'Fin: ${_formatDate(estadia.fechaFin)}',
+              ),
+              _InfoRow(
+                icon: Icons.help_outline,
+                text: 'Apoyo: ${estadia.apoyo}',
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: _getStatusColor(estadia.estatus),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  estadia.estatus,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -172,8 +206,6 @@ class _EstadiaCard extends StatelessWidget {
         return Colors.blue;
       case 'cancelado':
         return Colors.red;
-      case 'solicitada':
-        return Colors.orange;
       default:
         return Colors.grey;
     }

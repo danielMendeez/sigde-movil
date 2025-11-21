@@ -4,6 +4,7 @@ import 'package:sigde/services/estadia/estadia_service.dart';
 import 'package:sigde/services/estadia/estadia_service_implementation.dart';
 import 'package:sigde/viewmodels/estadia/listar_estadias_viewmodel.dart';
 import 'package:sigde/viewmodels/estadia/registrar_estadia_viewmodel.dart';
+import 'package:sigde/viewmodels/estadia/ver_estadia_viewmodel.dart';
 
 final getIt = GetIt.instance;
 
@@ -21,5 +22,9 @@ void setupDependencies() {
 
   getIt.registerFactory<RegistrarEstadiaViewModel>(
     () => RegistrarEstadiaViewModel(getIt<EstadiaService>()),
+  );
+
+  getIt.registerFactory<VerEstadiaViewModel>(
+    () => VerEstadiaViewModel(getIt<EstadiaService>()),
   );
 }

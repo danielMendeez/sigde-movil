@@ -1,5 +1,5 @@
 class Estadia {
-  final int id; // ✅ AGREGAR ESTE CAMPO
+  final int id;
   final int alumnoId;
   final int idDocente;
   final int empresaId;
@@ -10,11 +10,11 @@ class Estadia {
   final DateTime fechaFin;
   final String apoyo;
   final String estatus;
-  final DateTime createdAt; // ✅ AGREGAR
-  final DateTime updatedAt; // ✅ AGREGAR
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Estadia({
-    required this.id, // ✅ AGREGAR
+    required this.id,
     required this.alumnoId,
     required this.idDocente,
     required this.empresaId,
