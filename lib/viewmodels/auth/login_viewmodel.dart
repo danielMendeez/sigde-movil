@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import '../../models/auth/login_request.dart';
-import '../../models/user.dart';
-import '../../services/auth/auth_login_service.dart';
-import '../../services/auth/secure_storage_service.dart';
+import 'package:sigde/models/auth/login_request.dart';
+import 'package:sigde/models/user.dart';
+import 'package:sigde/services/auth/auth_login_service.dart';
+import 'package:sigde/services/auth/secure_storage_service.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final AuthLoginService _authLoginService = AuthLoginService();

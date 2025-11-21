@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../viewmodels/auth/register_viewmodel.dart';
-import '../components/layout/form_header.dart';
-import '../components/layout/form_footer.dart';
-import '../components/forms/register_form.dart';
-import '../components/buttons/primary_button.dart';
-import '../components/feedback/error_message.dart';
+import 'package:sigde/viewmodels/auth/register_viewmodel.dart';
+import 'package:sigde/views/components/layout/form_header.dart';
+import 'package:sigde/views/components/layout/form_footer.dart';
+import 'package:sigde/views/components/forms/register_form.dart';
+import 'package:sigde/views/components/buttons/primary_button.dart';
+import 'package:sigde/views/components/feedback/error_message.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});

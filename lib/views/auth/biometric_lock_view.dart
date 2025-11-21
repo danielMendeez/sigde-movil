@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../services/auth/biometric_auth_service.dart';
-import '../../viewmodels/auth/auth_viewmodel.dart';
+import 'package:sigde/services/auth/biometric_auth_service.dart';
+import 'package:sigde/viewmodels/auth/auth_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class BiometricLockView extends StatefulWidget {

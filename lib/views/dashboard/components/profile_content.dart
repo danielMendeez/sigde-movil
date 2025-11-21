@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../models/user.dart';
+import 'package:sigde/models/user.dart';
 
 class ProfileContent extends StatelessWidget {
   final User user;

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../../models/auth/register_request.dart';
-import '../../models/user.dart';
+import 'package:sigde/models/auth/register_request.dart';
+import 'package:sigde/models/user.dart';
 
 class AuthRegisterService {
   late final Dio _dio;

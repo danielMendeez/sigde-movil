@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import '../../models/auth/register_request.dart';
-import '../../models/user.dart';
-import '../../services/auth/auth_register_service.dart';
-import '../../services/auth/secure_storage_service.dart';
+import 'package:sigde/models/auth/register_request.dart';
+import 'package:sigde/models/user.dart';
+import 'package:sigde/services/auth/auth_register_service.dart';
+import 'package:sigde/services/auth/secure_storage_service.dart';
 
 class RegisterViewModel extends ChangeNotifier {
   final AuthRegisterService _authRegisterService = AuthRegisterService();

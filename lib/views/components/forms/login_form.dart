@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../viewmodels/auth/login_viewmodel.dart';
+import 'package:sigde/viewmodels/auth/login_viewmodel.dart';
 import 'custom_text_field.dart';
 
 class LoginForm extends StatelessWidget {

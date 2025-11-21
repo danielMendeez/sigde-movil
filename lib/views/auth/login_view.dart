@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../viewmodels/auth/login_viewmodel.dart';
-import '../../viewmodels/auth/auth_viewmodel.dart';
-import '../../services/auth/secure_storage_service.dart';
-import '../components/layout/form_header.dart';
-import '../components/layout/form_footer.dart';
-import '../components/forms/login_form.dart';
-import '../components/buttons/primary_button.dart';
-import '../components/feedback/error_message.dart';
+import 'package:sigde/viewmodels/auth/login_viewmodel.dart';
+import 'package:sigde/viewmodels/auth/auth_viewmodel.dart';
+import 'package:sigde/services/auth/secure_storage_service.dart';
+import 'package:sigde/views/components/layout/form_header.dart';
+import 'package:sigde/views/components/layout/form_footer.dart';
+import 'package:sigde/views/components/forms/login_form.dart';
+import 'package:sigde/views/components/buttons/primary_button.dart';
+import 'package:sigde/views/components/feedback/error_message.dart';
 
 class LoginView extends StatefulWidget {
   final String? successMessage;

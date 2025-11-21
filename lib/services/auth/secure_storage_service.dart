@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../models/user.dart';
+import 'package:sigde/models/user.dart';
 
 class SecureStorageService {
   static const _storage = FlutterSecureStorage();
