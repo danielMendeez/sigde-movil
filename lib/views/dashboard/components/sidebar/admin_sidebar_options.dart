@@ -33,7 +33,13 @@ class AdminSidebarOptions extends StatelessWidget {
           context: context,
           index: 3,
           icon: Icons.document_scanner,
-          title: 'Estadias',
+          title: 'Listar Estadias',
+        ),
+        _buildListTile(
+          context: context,
+          index: 4,
+          icon: Icons.edit_document,
+          title: 'Registrar Estadia',
         ),
         // Puedes agregar más opciones específicas de admin
       ],

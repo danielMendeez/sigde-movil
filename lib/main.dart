@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:sigde/viewmodels/estadia/registrar_estadia_viewmodel.dart';
 import 'app_router.dart';
 import 'package:provider/provider.dart';
 import 'viewmodels/auth/login_viewmodel.dart';
@@ -32,9 +33,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthViewModel()..initialize()),
         ChangeNotifierProvider(create: (_) => DashboardViewModel()),
         ChangeNotifierProvider(create: (_) => RegisterViewModel()),
-        // Usar GetIt para proveer el ListarEstadiasViewModel
+        // Usar GetIt para proveer los ViewModels de locator
         ChangeNotifierProvider(
           create: (context) => getIt<ListarEstadiasViewModel>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => getIt<RegistrarEstadiaViewModel>(),
         ),
       ],
       child: MaterialApp.router(
