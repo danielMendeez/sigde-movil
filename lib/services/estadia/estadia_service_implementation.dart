@@ -2,6 +2,7 @@ import 'package:sigde/models/estadia/estadia.dart';
 import 'package:sigde/models/estadia/listar_estadias_request.dart';
 import 'package:sigde/models/estadia/registrar_estadia_request.dart';
 import 'package:sigde/models/estadia/ver_estadia_request.dart';
+import 'package:sigde/models/estadia/actualizar_estadia_request.dart';
 import 'package:sigde/services/api_client.dart';
 import 'estadia_service.dart';
 
@@ -84,6 +85,26 @@ class EstadiaServiceImplementation implements EstadiaService {
       }
     } catch (e) {
       throw EstadiaException('Error al obtener estadía: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Estadia> actualizarEstadia(ActualizarEstadiaRequest request) async {
+    try {
+      final response = await _apiClient.post(
+        '/estadia/update',
+        data: request.toJson(),
+      );
+
+      if (response.containsKey('estadia')) {
+        return Estadia.fromJson(response['estadia']);
+      } else {
+        throw EstadiaException(
+          'Formato de respuesta inválido: no se encontró "estadia"',
+        );
+      }
+    } catch (e) {
+      throw EstadiaException('Error al actualizar estadía: ${e.toString()}');
     }
   }
 }
