@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sigde/models/estadia/estadia.dart';
+import 'package:sigde/utils/toast_helper.dart';
 import 'package:sigde/viewmodels/estadia/listar_estadias_viewmodel.dart';
+import 'package:sigde/viewmodels/estadia/eliminar_estadia_viewmodel.dart';
 import 'package:sigde/views/estadia/ver_estadia_view.dart';
 import 'package:sigde/views/estadia/actualizar_estadia_view.dart';
+import 'package:sigde/views/widgets/confirmar_eliminacion_dialog.dart';
 
 class ListarEstadiasView extends StatefulWidget {
   final String token;
@@ -31,6 +34,37 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
             ActualizarEstadiaView(token: widget.token, estadia: estadia),
       ),
     );
+  }
+
+  void _eliminarEstadia(BuildContext context, Estadia estadia) async {
+    await showDialog<bool>(
+      context: context,
+      builder: (context) => ConfirmarEliminacionDialog(
+        titulo: 'Eliminar Estadía',
+        mensaje:
+            '¿Estás seguro de que quieres eliminar la estadía "${estadia.proyectoNombre}"? Esta acción no se puede deshacer.',
+        onConfirmar: () => _procesarEliminacion(estadia),
+      ),
+    );
+  }
+
+  void _procesarEliminacion(Estadia estadia) async {
+    // Remover context parameter
+    final eliminarViewModel = context.read<EliminarEstadiaViewModel>();
+    final listarViewModel = context.read<ListarEstadiasViewModel>();
+
+    final success = await eliminarViewModel.eliminarEstadia(
+      widget.token,
+      estadia.id,
+    );
+
+    if (success || eliminarViewModel.success) {
+      listarViewModel.eliminarEstadiaLocal(estadia.id);
+      listarViewModel.cargarEstadias(widget.token);
+      ToastHelper.showSuccess('Estadía eliminada correctamente');
+    } else if (eliminarViewModel.hasError) {
+      ToastHelper.showError('Error: ${eliminarViewModel.errorMessage}');
+    }
   }
 
   @override
@@ -105,10 +139,22 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
               return _EstadiaCard(
                 estadia: estadia,
                 token: widget.token,
-                trailing: IconButton(
-                  tooltip: 'Editar estadía',
-                  icon: const Icon(Icons.edit, color: Colors.blue),
-                  onPressed: () => _editarEstadia(context, estadia),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Botón editar
+                    IconButton(
+                      tooltip: 'Editar estadía',
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () => _editarEstadia(context, estadia),
+                    ),
+                    // Botón eliminar
+                    IconButton(
+                      tooltip: 'Eliminar estadía',
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _eliminarEstadia(context, estadia),
+                    ),
+                  ],
                 ),
                 onTap: () {
                   Navigator.push(

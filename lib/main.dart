@@ -11,6 +11,7 @@ import 'viewmodels/dashboard_viewmodel.dart';
 import 'viewmodels/estadia/listar_estadias_viewmodel.dart';
 import 'viewmodels/estadia/ver_estadia_viewmodel.dart';
 import 'viewmodels/estadia/actualizar_estadia_viewmodel.dart';
+import 'viewmodels/estadia/eliminar_estadia_viewmodel.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +48,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => getIt<ActualizarEstadiaViewModel>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => getIt<EliminarEstadiaViewModel>(),
         ),
       ],
       child: MaterialApp.router(

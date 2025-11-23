@@ -6,6 +6,7 @@ import 'package:sigde/viewmodels/estadia/listar_estadias_viewmodel.dart';
 import 'package:sigde/viewmodels/estadia/registrar_estadia_viewmodel.dart';
 import 'package:sigde/viewmodels/estadia/ver_estadia_viewmodel.dart';
 import 'package:sigde/viewmodels/estadia/actualizar_estadia_viewmodel.dart';
+import 'package:sigde/viewmodels/estadia/eliminar_estadia_viewmodel.dart';
 
 final getIt = GetIt.instance;
 
@@ -20,16 +21,16 @@ void setupDependencies() {
   getIt.registerFactory<ListarEstadiasViewModel>(
     () => ListarEstadiasViewModel(getIt<EstadiaService>()),
   );
-
   getIt.registerFactory<RegistrarEstadiaViewModel>(
     () => RegistrarEstadiaViewModel(getIt<EstadiaService>()),
   );
-
   getIt.registerFactory<VerEstadiaViewModel>(
     () => VerEstadiaViewModel(getIt<EstadiaService>()),
   );
-
   getIt.registerFactory<ActualizarEstadiaViewModel>(
     () => ActualizarEstadiaViewModel(getIt<EstadiaService>()),
+  );
+  getIt.registerFactory<EliminarEstadiaViewModel>(
+    () => EliminarEstadiaViewModel(getIt<EstadiaService>()),
   );
 }

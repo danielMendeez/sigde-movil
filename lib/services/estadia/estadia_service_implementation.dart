@@ -1,10 +1,11 @@
+import 'estadia_service.dart';
+import 'package:sigde/services/api_client.dart';
 import 'package:sigde/models/estadia/estadia.dart';
 import 'package:sigde/models/estadia/listar_estadias_request.dart';
 import 'package:sigde/models/estadia/registrar_estadia_request.dart';
 import 'package:sigde/models/estadia/ver_estadia_request.dart';
 import 'package:sigde/models/estadia/actualizar_estadia_request.dart';
-import 'package:sigde/services/api_client.dart';
-import 'estadia_service.dart';
+import 'package:sigde/models/estadia/eliminar_estadia_request.dart';
 
 class EstadiaException implements Exception {
   final String message;
@@ -105,6 +106,27 @@ class EstadiaServiceImplementation implements EstadiaService {
       }
     } catch (e) {
       throw EstadiaException('Error al actualizar estadía: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> eliminarEstadia(EliminarEstadiaRequest request) async {
+    try {
+      final response = await _apiClient.post(
+        '/estadia/delete',
+        data: request.toJson(),
+      );
+
+      final message = response['message']?.toString() ?? '';
+      if (message.toLowerCase().contains('éxito') ||
+          message.toLowerCase().contains('exito') ||
+          message.toLowerCase().contains('eliminada')) {
+        return;
+      } else {
+        throw EstadiaException('Error del servidor: $message');
+      }
+    } catch (e) {
+      throw EstadiaException('Error al eliminar estadía: ${e.toString()}');
     }
   }
 }
