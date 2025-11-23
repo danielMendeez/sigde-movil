@@ -6,23 +6,42 @@ import 'package:sigde/viewmodels/estadia/listar_estadias_viewmodel.dart';
 import 'package:sigde/viewmodels/estadia/eliminar_estadia_viewmodel.dart';
 import 'package:sigde/views/estadia/ver_estadia_view.dart';
 import 'package:sigde/views/estadia/actualizar_estadia_view.dart';
+import 'package:sigde/views/estadia/registrar_estadia_view.dart';
 import 'package:sigde/views/widgets/confirmar_eliminacion_dialog.dart';
+import 'package:sigde/utils/provider_helpers.dart';
 
-class ListarEstadiasView extends StatefulWidget {
+class ListarEstadiasView extends StatelessWidget {
   final String token;
 
   const ListarEstadiasView({Key? key, required this.token}) : super(key: key);
 
   @override
-  State<ListarEstadiasView> createState() => _ListarEstadiasViewState();
+  Widget build(BuildContext context) {
+    return AppProviders.wrapWithListarEstadiasProviders(
+      token: token, // Pasar token al wrapper
+      child: _ListarEstadiasViewContent(),
+    );
+  }
 }
 
-class _ListarEstadiasViewState extends State<ListarEstadiasView> {
+class _ListarEstadiasViewContent extends StatefulWidget {
+  const _ListarEstadiasViewContent({Key? key}) : super(key: key);
+
+  @override
+  State<_ListarEstadiasViewContent> createState() =>
+      _ListarEstadiasViewContentState();
+}
+
+class _ListarEstadiasViewContentState
+    extends State<_ListarEstadiasViewContent> {
+  // Método para obtener el token
+  String get _token => AppProviders.getToken(context);
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ListarEstadiasViewModel>().cargarEstadias(widget.token);
+      context.read<ListarEstadiasViewModel>().cargarEstadias(_token);
     });
   }
 
@@ -31,7 +50,7 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
       context,
       MaterialPageRoute(
         builder: (context) =>
-            ActualizarEstadiaView(token: widget.token, estadia: estadia),
+            ActualizarEstadiaView(token: _token, estadia: estadia),
       ),
     );
   }
@@ -53,14 +72,11 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
     final eliminarViewModel = context.read<EliminarEstadiaViewModel>();
     final listarViewModel = context.read<ListarEstadiasViewModel>();
 
-    final success = await eliminarViewModel.eliminarEstadia(
-      widget.token,
-      estadia.id,
-    );
+    final success = await eliminarViewModel.eliminarEstadia(_token, estadia.id);
 
     if (success || eliminarViewModel.success) {
       listarViewModel.eliminarEstadiaLocal(estadia.id);
-      listarViewModel.cargarEstadias(widget.token);
+      listarViewModel.cargarEstadias(_token);
       ToastHelper.showSuccess('Estadía eliminada correctamente');
     } else if (eliminarViewModel.hasError) {
       ToastHelper.showError('Error: ${eliminarViewModel.errorMessage}');
@@ -78,8 +94,17 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              context.read<ListarEstadiasViewModel>().cargarEstadias(
-                widget.token,
+              context.read<ListarEstadiasViewModel>().cargarEstadias(_token);
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.create_new_folder),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RegistrarEstadiaView(token: _token),
+                ),
               );
             },
           ),
@@ -106,7 +131,7 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      viewModel.cargarEstadias(widget.token);
+                      viewModel.cargarEstadias(_token);
                     },
                     child: const Text('Reintentar'),
                   ),
@@ -138,7 +163,7 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
               final estadia = viewModel.estadias[index];
               return _EstadiaCard(
                 estadia: estadia,
-                token: widget.token,
+                token: _token,
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -160,10 +185,8 @@ class _ListarEstadiasViewState extends State<ListarEstadiasView> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => VerEstadiaView(
-                        token: widget.token,
-                        estadiaId: estadia.id,
-                      ),
+                      builder: (context) =>
+                          VerEstadiaView(token: _token, estadiaId: estadia),
                     ),
                   );
                 },

@@ -2,19 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sigde/models/estadia/estadia.dart';
 import 'package:sigde/viewmodels/estadia/ver_estadia_viewmodel.dart';
+import 'package:sigde/utils/provider_helpers.dart';
 
-class VerEstadiaView extends StatefulWidget {
+class VerEstadiaView extends StatelessWidget {
   final String token;
-  final int estadiaId;
+  final Estadia estadiaId;
 
   const VerEstadiaView({Key? key, required this.token, required this.estadiaId})
     : super(key: key);
 
   @override
-  State<VerEstadiaView> createState() => _VerEstadiaViewState();
+  Widget build(BuildContext context) {
+    return AppProviders.wrapWithVerEditarEstadiaProviders(
+      token: token,
+      child: _VerEstadiaViewContent(estadiaId: estadiaId.id),
+    );
+  }
 }
 
-class _VerEstadiaViewState extends State<VerEstadiaView> {
+class _VerEstadiaViewContent extends StatefulWidget {
+  final int estadiaId;
+
+  const _VerEstadiaViewContent({Key? key, required this.estadiaId})
+    : super(key: key);
+
+  @override
+  State<_VerEstadiaViewContent> createState() => _VerEstadiaViewContentState();
+}
+
+class _VerEstadiaViewContentState extends State<_VerEstadiaViewContent> {
+  String get _token => AppProviders.getToken(context);
+
   @override
   void initState() {
     super.initState();
@@ -27,12 +45,12 @@ class _VerEstadiaViewState extends State<VerEstadiaView> {
 
   void _cargarEstadiaInicial() {
     final viewModel = Provider.of<VerEstadiaViewModel>(context, listen: false);
-    viewModel.cargarEstadia(widget.token, widget.estadiaId);
+    viewModel.cargarEstadia(_token, widget.estadiaId);
   }
 
   void _recargarEstadia() {
     final viewModel = Provider.of<VerEstadiaViewModel>(context, listen: false);
-    viewModel.cargarEstadia(widget.token, widget.estadiaId);
+    viewModel.cargarEstadia(_token, widget.estadiaId);
   }
 
   @override

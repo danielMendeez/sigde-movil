@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sigde/locator.dart';
 import 'package:sigde/models/estadia/actualizar_estadia_request.dart';
 import 'package:sigde/models/estadia/estadia.dart';
 import 'package:sigde/viewmodels/estadia/actualizar_estadia_viewmodel.dart';
+import 'package:sigde/utils/provider_helpers.dart';
 
-class ActualizarEstadiaView extends StatefulWidget {
+class ActualizarEstadiaView extends StatelessWidget {
   final String token;
   final Estadia estadia;
 
@@ -16,11 +16,29 @@ class ActualizarEstadiaView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ActualizarEstadiaView> createState() => _ActualizarEstadiaViewState();
+  Widget build(BuildContext context) {
+    return AppProviders.wrapWithVerEditarEstadiaProviders(
+      token: token,
+      child: _ActualizarEstadiaViewContent(estadia: estadia),
+    );
+  }
 }
 
-class _ActualizarEstadiaViewState extends State<ActualizarEstadiaView> {
+class _ActualizarEstadiaViewContent extends StatefulWidget {
+  final Estadia estadia;
+
+  const _ActualizarEstadiaViewContent({Key? key, required this.estadia})
+    : super(key: key);
+
+  @override
+  State<_ActualizarEstadiaViewContent> createState() =>
+      _ActualizarEstadiaViewContentState();
+}
+
+class _ActualizarEstadiaViewContentState
+    extends State<_ActualizarEstadiaViewContent> {
   final _formKey = GlobalKey<FormState>();
+  String get _token => AppProviders.getToken(context);
 
   // Controladores para los campos del formulario
   late final TextEditingController _alumnoIdController;
@@ -144,7 +162,7 @@ class _ActualizarEstadiaViewState extends State<ActualizarEstadiaView> {
 
       // Crear request para actualizar
       final request = ActualizarEstadiaRequest(
-        token: widget.token,
+        token: _token,
         id: widget.estadia.id,
         alumnoId: int.parse(_alumnoIdController.text),
         idDocente: int.parse(_idDocenteController.text),
@@ -237,217 +255,211 @@ class _ActualizarEstadiaViewState extends State<ActualizarEstadiaView> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => getIt<ActualizarEstadiaViewModel>(),
-      child: WillPopScope(
-        onWillPop: _mostrarDialogoSalir,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Actualizar Estadía'),
-            backgroundColor: Colors.orange,
-            foregroundColor: Colors.white,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.restore),
-                onPressed: _limpiarFormulario,
-                tooltip: 'Restaurar valores originales',
-              ),
-            ],
-          ),
-          body: Consumer<ActualizarEstadiaViewModel>(
-            builder: (context, viewModel, child) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: [
-                      // Información de la estadía actual
-                      _buildInfoEstadia(),
-                      const SizedBox(height: 16),
+    return WillPopScope(
+      onWillPop: _mostrarDialogoSalir,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Actualizar Estadía'),
+          backgroundColor: Colors.orange,
+          foregroundColor: Colors.white,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.restore),
+              onPressed: _limpiarFormulario,
+              tooltip: 'Restaurar valores originales',
+            ),
+          ],
+        ),
+        body: Consumer<ActualizarEstadiaViewModel>(
+          builder: (context, viewModel, child) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    // Información de la estadía actual
+                    _buildInfoEstadia(),
+                    const SizedBox(height: 16),
 
-                      // Mostrar errores
-                      if (viewModel.hasError) ...[
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.red[50],
-                            border: Border.all(color: Colors.red),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.error_outline,
-                                color: Colors.red,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  viewModel.errorMessage,
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.close, size: 16),
-                                onPressed: () => viewModel.limpiarError(),
-                              ),
-                            ],
-                          ),
+                    // Mostrar errores
+                    if (viewModel.hasError) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.red[50],
+                          border: Border.all(color: Colors.red),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        const SizedBox(height: 16),
-                      ],
-
-                      // Campo: ID Alumno
-                      _buildTextField(
-                        controller: _alumnoIdController,
-                        label: 'ID Alumno',
-                        hintText: 'Ingrese el ID del alumno',
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese el ID del alumno';
-                          }
-                          if (int.tryParse(value) == null) {
-                            return 'Ingrese un número válido';
-                          }
-                          return null;
-                        },
+                        child: Row(
+                          children: [
+                            const Icon(Icons.error_outline, color: Colors.red),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                viewModel.errorMessage,
+                                style: const TextStyle(color: Colors.red),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close, size: 16),
+                              onPressed: () => viewModel.limpiarError(),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 16),
-
-                      // Campo: ID Docente
-                      _buildTextField(
-                        controller: _idDocenteController,
-                        label: 'ID Docente',
-                        hintText: 'Ingrese el ID del docente',
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese el ID del docente';
-                          }
-                          if (int.tryParse(value) == null) {
-                            return 'Ingrese un número válido';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Campo: ID Empresa
-                      _buildTextField(
-                        controller: _empresaIdController,
-                        label: 'ID Empresa',
-                        hintText: 'Ingrese el ID de la empresa',
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese el ID de la empresa';
-                          }
-                          if (int.tryParse(value) == null) {
-                            return 'Ingrese un número válido';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Campo: Asesor Externo
-                      _buildTextField(
-                        controller: _asesorExternoController,
-                        label: 'Asesor Externo',
-                        hintText: 'Ingrese el nombre del asesor externo',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese el nombre del asesor';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Campo: Nombre del Proyecto
-                      _buildTextField(
-                        controller: _proyectoNombreController,
-                        label: 'Nombre del Proyecto',
-                        hintText: 'Ingrese el nombre del proyecto',
-                        maxLines: 2,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese el nombre del proyecto';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Campo: Duración en Semanas
-                      _buildTextField(
-                        controller: _duracionSemanasController,
-                        label: 'Duración (semanas)',
-                        hintText: 'Ingrese la duración en semanas',
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese la duración';
-                          }
-                          if (int.tryParse(value) == null) {
-                            return 'Ingrese un número válido';
-                          }
-                          if (int.parse(value) <= 0) {
-                            return 'La duración debe ser mayor a 0';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Fecha Inicio
-                      _buildDateField(
-                        context: context,
-                        label: 'Fecha Inicio',
-                        selectedDate: _fechaInicio,
-                        onTap: () => _seleccionarFechaInicio(context),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Fecha Fin
-                      _buildDateField(
-                        context: context,
-                        label: 'Fecha Fin',
-                        selectedDate: _fechaFin,
-                        onTap: () => _seleccionarFechaFin(context),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Campo: Apoyo
-                      _buildTextField(
-                        controller: _apoyoController,
-                        label: 'Tipo de Apoyo',
-                        hintText: 'Describa el tipo de apoyo',
-                        maxLines: 3,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor ingrese el tipo de apoyo';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Selector de Estatus
-                      _buildDropdownEstatus(),
-                      const SizedBox(height: 24),
-
-                      // Botón de actualizar
-                      _buildSubmitButton(viewModel),
                     ],
-                  ),
+
+                    // Campo: ID Alumno
+                    _buildTextField(
+                      controller: _alumnoIdController,
+                      label: 'ID Alumno',
+                      hintText: 'Ingrese el ID del alumno',
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese el ID del alumno';
+                        }
+                        if (int.tryParse(value) == null) {
+                          return 'Ingrese un número válido';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Campo: ID Docente
+                    _buildTextField(
+                      controller: _idDocenteController,
+                      label: 'ID Docente',
+                      hintText: 'Ingrese el ID del docente',
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese el ID del docente';
+                        }
+                        if (int.tryParse(value) == null) {
+                          return 'Ingrese un número válido';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Campo: ID Empresa
+                    _buildTextField(
+                      controller: _empresaIdController,
+                      label: 'ID Empresa',
+                      hintText: 'Ingrese el ID de la empresa',
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese el ID de la empresa';
+                        }
+                        if (int.tryParse(value) == null) {
+                          return 'Ingrese un número válido';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Campo: Asesor Externo
+                    _buildTextField(
+                      controller: _asesorExternoController,
+                      label: 'Asesor Externo',
+                      hintText: 'Ingrese el nombre del asesor externo',
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese el nombre del asesor';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Campo: Nombre del Proyecto
+                    _buildTextField(
+                      controller: _proyectoNombreController,
+                      label: 'Nombre del Proyecto',
+                      hintText: 'Ingrese el nombre del proyecto',
+                      maxLines: 2,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese el nombre del proyecto';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Campo: Duración en Semanas
+                    _buildTextField(
+                      controller: _duracionSemanasController,
+                      label: 'Duración (semanas)',
+                      hintText: 'Ingrese la duración en semanas',
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese la duración';
+                        }
+                        if (int.tryParse(value) == null) {
+                          return 'Ingrese un número válido';
+                        }
+                        if (int.parse(value) <= 0) {
+                          return 'La duración debe ser mayor a 0';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Fecha Inicio
+                    _buildDateField(
+                      context: context,
+                      label: 'Fecha Inicio',
+                      selectedDate: _fechaInicio,
+                      onTap: () => _seleccionarFechaInicio(context),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Fecha Fin
+                    _buildDateField(
+                      context: context,
+                      label: 'Fecha Fin',
+                      selectedDate: _fechaFin,
+                      onTap: () => _seleccionarFechaFin(context),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Campo: Apoyo
+                    _buildTextField(
+                      controller: _apoyoController,
+                      label: 'Tipo de Apoyo',
+                      hintText: 'Describa el tipo de apoyo',
+                      maxLines: 3,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor ingrese el tipo de apoyo';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Selector de Estatus
+                    _buildDropdownEstatus(),
+                    const SizedBox(height: 24),
+
+                    // Botón de actualizar
+                    _buildSubmitButton(viewModel),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
