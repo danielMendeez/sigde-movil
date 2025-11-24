@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
 import 'package:sigde/utils/provider_helpers.dart';
+import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
 import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_viewmodel.dart';
+import 'package:sigde/views/carta_presentacion/ver_carta_presentacion_view.dart';
 
 class ListarCartasPresentacionView extends StatelessWidget {
   final String token;
@@ -49,16 +49,14 @@ class _ListarCartasPresentacionViewContentState
   }
 
   void _verDetalleCarta(BuildContext context, CartaPresentacion carta) {
-    // Navegar a vista de detalle (implementar después)
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => VerCartaPresentacionView(
-    //       token: _token,
-    //       carta: carta,
-    //     ),
-    //   ),
-    // );
+    // Navegar a vista de detalle
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            VerCartaPresentacionView(token: _token, cartaId: carta),
+      ),
+    );
   }
 
   void _editarCarta(BuildContext context, CartaPresentacion carta) {

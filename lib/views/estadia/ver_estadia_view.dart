@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sigde/models/estadia/estadia.dart';
 import 'package:sigde/viewmodels/estadia/ver_estadia_viewmodel.dart';
 import 'package:sigde/utils/provider_helpers.dart';
+import 'package:sigde/views/estadia/actualizar_estadia_view.dart';
 
 class VerEstadiaView extends StatelessWidget {
   final String token;
@@ -53,6 +54,27 @@ class _VerEstadiaViewContentState extends State<_VerEstadiaViewContent> {
     viewModel.cargarEstadia(_token, widget.estadiaId);
   }
 
+  void _editarEstadia() {
+    final viewModel = Provider.of<VerEstadiaViewModel>(context, listen: false);
+    final estadia = viewModel.estadia;
+    if (estadia == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se encontró la estadía para editar.')),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ActualizarEstadiaView(token: _token, estadia: estadia),
+      ),
+    ).then((_) {
+      _recargarEstadia();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,6 +87,11 @@ class _VerEstadiaViewContentState extends State<_VerEstadiaViewContent> {
             icon: const Icon(Icons.refresh),
             onPressed: _recargarEstadia,
             tooltip: 'Recargar',
+          ),
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: _editarEstadia,
+            tooltip: 'Editar Estadía',
           ),
         ],
       ),

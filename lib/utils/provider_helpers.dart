@@ -17,9 +17,10 @@ import 'package:sigde/viewmodels/estadia/eliminar_estadia_viewmodel.dart';
 
 // ViewModels de Carta de Presentación
 import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_viewmodel.dart';
+import 'package:sigde/viewmodels/carta_presentacion/ver_carta_presentacion_viewmodel.dart';
 
 class AppProviders {
-  // Providers globales
+  // PROVIDERS GLOBALES
   static List<ChangeNotifierProvider<ChangeNotifier>> get globalProviders => [
     ChangeNotifierProvider<AuthViewModel>(
       create: (_) => AuthViewModel()..initialize(),
@@ -33,7 +34,7 @@ class AppProviders {
     ),
   ];
 
-  // Providers de Estadía
+  // PROVIDERS DE ESTADIA
   static List<ChangeNotifierProvider<ChangeNotifier>> get estadiaProviders => [
     ChangeNotifierProvider<ListarEstadiasViewModel>(
       create: (_) => getIt<ListarEstadiasViewModel>(),
@@ -52,16 +53,19 @@ class AppProviders {
     ),
   ];
 
-  // Providers de Carta de Presentación
+  // PROVIDERS DE CARTA DE PRESENTACIÓN
   static List<ChangeNotifierProvider<ChangeNotifier>>
   get cartaPresentacionProviders => [
     ChangeNotifierProvider<ListarCartasPresentacionViewModel>(
       create: (_) => getIt<ListarCartasPresentacionViewModel>(),
     ),
+    ChangeNotifierProvider<VerCartaPresentacionViewModel>(
+      create: (_) => getIt<VerCartaPresentacionViewModel>(),
+    ),
   ];
 
-  // Providers específicos por pantalla
-  // Estadía
+  // PROVIDERS ESPECIFICOS POR PANTALLA
+  // ESTADIA
   // Pantalla: Listar Estadías
   static List<ChangeNotifierProvider<ChangeNotifier>>
   get listarEstadiasProviders => [
@@ -92,7 +96,7 @@ class AppProviders {
     ),
   ];
 
-  // Carta de Presentación
+  // CARTA DE PRESENTACIÓN
   // Pantalla: Listar Cartas de Presentación
   static List<ChangeNotifierProvider<ChangeNotifier>>
   get listarCartasPresentacionProviders => [
@@ -101,8 +105,16 @@ class AppProviders {
     ),
   ];
 
-  // Wrappers especificos para envolver widgets con providers y token
-  // Estadía
+  // Pantalla: Ver/Editar carta de presentación
+  static List<ChangeNotifierProvider<ChangeNotifier>>
+  get verEditarCartaPresentacionProviders => [
+    ChangeNotifierProvider<VerCartaPresentacionViewModel>(
+      create: (_) => getIt<VerCartaPresentacionViewModel>(),
+    ),
+  ];
+
+  // WRAPPERS PARA PANTALLAS CON PROVIDERS ESPECIFICOS
+  // ESTADIA
   static Widget wrapWithListarEstadiasProviders({
     required String token,
     required Widget child,
@@ -133,13 +145,23 @@ class AppProviders {
     );
   }
 
-  // Carta de Presentación
+  // CARTA DE PRESENTACIÓN
   static Widget wrapWithListarCartasPresentacionProviders({
     required String token,
     required Widget child,
   }) {
     return MultiProvider(
       providers: listarCartasPresentacionProviders,
+      child: TokenWrapper(token: token, child: child),
+    );
+  }
+
+  static Widget wrapWithVerEditarCartaPresentacionProviders({
+    required String token,
+    required Widget child,
+  }) {
+    return MultiProvider(
+      providers: verEditarCartaPresentacionProviders,
       child: TokenWrapper(token: token, child: child),
     );
   }

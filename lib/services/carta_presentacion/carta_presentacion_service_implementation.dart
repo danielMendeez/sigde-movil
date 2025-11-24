@@ -1,7 +1,8 @@
-import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
-import 'package:sigde/models/carta_presentacion/listar_cartas_presentacion_request.dart';
 import 'package:sigde/services/api_client.dart';
 import 'package:sigde/services/carta_presentacion/carta_presentacion_service.dart';
+import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
+import 'package:sigde/models/carta_presentacion/listar_cartas_presentacion_request.dart';
+import 'package:sigde/models/carta_presentacion/ver_carta_presentacion_request.dart';
 
 class CartaPresentacionException implements Exception {
   final String message;
@@ -44,6 +45,33 @@ class CartaPresentacionServiceImplementation
     } catch (e) {
       throw CartaPresentacionException(
         'Error al listar cartas de presentación: ${e.toString()}',
+      );
+    }
+  }
+
+  @override
+  Future<CartaPresentacion> verCartaPresentacion(
+    VerCartaPresentacionRequest request,
+  ) async {
+    try {
+      final response = await _apiClient.post(
+        '/cartaPres/verCartaPres',
+        data: request.toJson(),
+      );
+
+      if (response.containsKey('cartaPres')) {
+        final cartaPresData = response['cartaPres'];
+        if (cartaPresData is Map<String, dynamic>) {
+          return CartaPresentacion.fromJson(cartaPresData);
+        } else {
+          throw CartaPresentacionException('Formato inválido para "cartaPres"');
+        }
+      } else {
+        throw CartaPresentacionException('Respuesta no contiene "cartaPres"');
+      }
+    } catch (e) {
+      throw CartaPresentacionException(
+        'Error al obtener carta de presentación: ${e.toString()}',
       );
     }
   }
