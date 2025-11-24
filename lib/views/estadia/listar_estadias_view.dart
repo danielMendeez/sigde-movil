@@ -96,17 +96,7 @@ class _ListarEstadiasViewContentState
             onPressed: () {
               context.read<ListarEstadiasViewModel>().cargarEstadias(_token);
             },
-          ),
-          IconButton(
-            icon: const Icon(Icons.create_new_folder),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RegistrarEstadiaView(token: _token),
-                ),
-              );
-            },
+            tooltip: 'Refrescar lista',
           ),
         ],
       ),
@@ -194,6 +184,20 @@ class _ListarEstadiasViewContentState
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RegistrarEstadiaView(token: _token),
+            ),
+          );
+        },
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
+        tooltip: 'Registrar nueva estadía',
       ),
     );
   }

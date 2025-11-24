@@ -15,6 +15,9 @@ import 'package:sigde/viewmodels/estadia/ver_estadia_viewmodel.dart';
 import 'package:sigde/viewmodels/estadia/actualizar_estadia_viewmodel.dart';
 import 'package:sigde/viewmodels/estadia/eliminar_estadia_viewmodel.dart';
 
+// ViewModels de Carta de Presentación
+import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_viewmodel.dart';
+
 class AppProviders {
   // Providers globales
   static List<ChangeNotifierProvider<ChangeNotifier>> get globalProviders => [
@@ -49,7 +52,16 @@ class AppProviders {
     ),
   ];
 
+  // Providers de Carta de Presentación
+  static List<ChangeNotifierProvider<ChangeNotifier>>
+  get cartaPresentacionProviders => [
+    ChangeNotifierProvider<ListarCartasPresentacionViewModel>(
+      create: (_) => getIt<ListarCartasPresentacionViewModel>(),
+    ),
+  ];
+
   // Providers específicos por pantalla
+  // Estadía
   // Pantalla: Listar Estadías
   static List<ChangeNotifierProvider<ChangeNotifier>>
   get listarEstadiasProviders => [
@@ -80,7 +92,17 @@ class AppProviders {
     ),
   ];
 
+  // Carta de Presentación
+  // Pantalla: Listar Cartas de Presentación
+  static List<ChangeNotifierProvider<ChangeNotifier>>
+  get listarCartasPresentacionProviders => [
+    ChangeNotifierProvider<ListarCartasPresentacionViewModel>(
+      create: (_) => getIt<ListarCartasPresentacionViewModel>(),
+    ),
+  ];
+
   // Wrappers especificos para envolver widgets con providers y token
+  // Estadía
   static Widget wrapWithListarEstadiasProviders({
     required String token,
     required Widget child,
@@ -107,6 +129,17 @@ class AppProviders {
   }) {
     return MultiProvider(
       providers: verEditarEstadiaProviders,
+      child: TokenWrapper(token: token, child: child),
+    );
+  }
+
+  // Carta de Presentación
+  static Widget wrapWithListarCartasPresentacionProviders({
+    required String token,
+    required Widget child,
+  }) {
+    return MultiProvider(
+      providers: listarCartasPresentacionProviders,
       child: TokenWrapper(token: token, child: child),
     );
   }

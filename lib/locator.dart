@@ -12,11 +12,19 @@ import 'package:sigde/viewmodels/estadia/ver_estadia_viewmodel.dart';
 import 'package:sigde/viewmodels/estadia/actualizar_estadia_viewmodel.dart';
 import 'package:sigde/viewmodels/estadia/eliminar_estadia_viewmodel.dart';
 
+// Servicios - Carta de Presentación
+import 'package:sigde/services/carta_presentacion/carta_presentacion_service.dart';
+import 'package:sigde/services/carta_presentacion/carta_presentacion_service_implementation.dart';
+
+// ViewModels - Carta de Presentación
+import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_viewmodel.dart';
+
 final GetIt getIt = GetIt.instance;
 
 void setupDependencies() {
   _setupServices();
   _setupEstadiaViewModels();
+  _setupCartaPresentacionViewModels();
 }
 
 void _setupServices() {
@@ -24,6 +32,10 @@ void _setupServices() {
 
   getIt.registerSingleton<EstadiaService>(
     EstadiaServiceImplementation(getIt<ApiClient>()),
+  );
+
+  getIt.registerSingleton<CartaPresentacionService>(
+    CartaPresentacionServiceImplementation(getIt<ApiClient>()),
   );
 }
 
@@ -42,5 +54,11 @@ void _setupEstadiaViewModels() {
   );
   getIt.registerFactory<EliminarEstadiaViewModel>(
     () => EliminarEstadiaViewModel(getIt<EstadiaService>()),
+  );
+}
+
+void _setupCartaPresentacionViewModels() {
+  getIt.registerFactory<ListarCartasPresentacionViewModel>(
+    () => ListarCartasPresentacionViewModel(getIt<CartaPresentacionService>()),
   );
 }
