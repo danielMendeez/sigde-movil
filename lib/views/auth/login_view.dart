@@ -9,6 +9,8 @@ import 'package:sigde/views/components/layout/form_footer.dart';
 import 'package:sigde/views/components/forms/login_form.dart';
 import 'package:sigde/views/components/buttons/primary_button.dart';
 import 'package:sigde/views/components/feedback/error_message.dart';
+import 'package:sigde/views/legal/privacy_policy_modal.dart';
+import 'package:sigde/views/legal/terms_of_service_modal.dart';
 
 class LoginView extends StatefulWidget {
   final String? successMessage;
@@ -49,24 +51,25 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _onRegister() {
-    // Navegar a la vista de registro
-    // print('Navegar a registro');
     context.go('/register');
   }
 
-  void _onForgotPassword() {
-    // Navegar a la vista de recuperación de contraseña
-    print('Navegar a recuperación de contraseña');
-  }
-
-  void _onContactSupport() {
-    // Abrir soporte técnico
-    print('Abrir soporte técnico');
-  }
-
   void _onPrivacyPolicy() {
-    // Abrir política de privacidad
-    print('Abrir política de privacidad');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const PrivacyPolicyModal(),
+    );
+  }
+
+  void _onTermsOfService() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const TermsOfServiceModal(),
+    );
   }
 
   @override
@@ -174,13 +177,11 @@ class _LoginViewState extends State<LoginView> {
     return FormFooter(
       helpText: '¿No tienes una cuenta?',
       primaryLink: FooterLink(text: 'Regístrate aquí', onTap: _onRegister),
-      copyrightText: '© 2024 Mi Empresa. Todos los derechos reservados.',
+      copyrightText: '© 2025 CreaCode. Todos los derechos reservados.',
       versionText: 'v1.0.0',
       links: [
-        // FooterLink(text: '¿Olvidaste tu contraseña?', onTap: _onForgotPassword),
-        FooterLink(text: '¿Olvidaste tu contraseña?', onTap: _onForgotPassword),
-        FooterLink(text: 'Contactar soporte', onTap: _onContactSupport),
         FooterLink(text: 'Política de privacidad', onTap: _onPrivacyPolicy),
+        FooterLink(text: 'Términos de servicio', onTap: _onTermsOfService),
       ],
       showDivider: true,
     );

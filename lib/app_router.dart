@@ -59,7 +59,6 @@ class AppRouter {
         name: 'biometric',
         builder: (context, state) => const BiometricLockView(),
       ),
-
       GoRoute(
         path: '/',
         name: 'home',

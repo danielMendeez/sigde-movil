@@ -7,6 +7,8 @@ import 'package:sigde/views/components/layout/form_footer.dart';
 import 'package:sigde/views/components/forms/register_form.dart';
 import 'package:sigde/views/components/buttons/primary_button.dart';
 import 'package:sigde/views/components/feedback/error_message.dart';
+import 'package:sigde/views/legal/privacy_policy_modal.dart';
+import 'package:sigde/views/legal/terms_of_service_modal.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -38,18 +40,25 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   void _onLogin() {
-    // Navegar a la vista de login
     context.go('/login');
   }
 
   void _onPrivacyPolicy() {
-    // Abrir política de privacidad
-    print('Abrir política de privacidad');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const PrivacyPolicyModal(),
+    );
   }
 
   void _onTermsOfService() {
-    // Abrir términos de servicio
-    print('Abrir términos de servicio');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const TermsOfServiceModal(),
+    );
   }
 
   @override
@@ -148,7 +157,7 @@ class _RegisterViewState extends State<RegisterView> {
     return FormFooter(
       helpText: '¿Ya tienes una cuenta?',
       primaryLink: FooterLink(text: 'Inicia sesión aquí', onTap: _onLogin),
-      copyrightText: '© 2024 Mi Empresa. Todos los derechos reservados.',
+      copyrightText: '© 2025 CreaCode. Todos los derechos reservados.',
       versionText: 'v1.0.0',
       links: [
         FooterLink(text: 'Política de privacidad', onTap: _onPrivacyPolicy),
