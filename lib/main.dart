@@ -27,9 +27,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'SIGDE',
         theme: ThemeData(
-          primarySwatch: Colors.green,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+          colorScheme: ColorScheme.light(
+            primary: Color.fromARGB(255, 57, 153, 62),
+            secondary: Color(0xFF66BB6A),
+          ),
         ),
+
         routerConfig: AppRouter.router,
         debugShowCheckedModeBanner: false,
       ),

@@ -11,45 +11,83 @@ class FormHeader extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.imagePath,
-    this.imageSize = 80,
+    required this.imageSize,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
+    return SizedBox(
+      height: imageSize,
+      child: Stack(
         children: [
-          Container(
-            width: imageSize,
-            height: imageSize,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.rectangle,
-              border: Border.all(color: Colors.green[300]!, width: 3),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.green[100]!,
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
+          Positioned.fill(
+            child: ShaderMask(
+              shaderCallback: (rect) {
+                return const LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Colors.transparent, Colors.black],
+                ).createShader(rect);
+              },
+              blendMode: BlendMode.dstIn,
+              child: Image.asset(imagePath, fit: BoxFit.cover),
+            ),
+          ),
+
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.center,
+                  colors: [Colors.black.withOpacity(0.30), Colors.transparent],
                 ),
-              ],
-            ),
-            child: ClipRect(child: Image.asset(imagePath, fit: BoxFit.contain)),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.green[800],
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 35),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          offset: const Offset(0, 1),
+                          blurRadius: 6,
+                          color: Colors.black.withOpacity(0.8),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    subtitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          offset: const Offset(0, 3),
+                          blurRadius: 6,
+                          color: Colors.black.withOpacity(0.5),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

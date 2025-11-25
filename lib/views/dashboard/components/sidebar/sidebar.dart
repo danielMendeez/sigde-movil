@@ -18,24 +18,138 @@ class Sidebar extends StatelessWidget {
     final selectedIndex = viewModel.selectedIndex;
 
     return Drawer(
-      child: Column(
-        children: [
-          UserAccountsDrawerHeader(
-            accountName: Text('${user.nombre} ${user.apellidoPaterno}'),
-            accountEmail: Text('Rol: ${user.tipoUsuario?.toUpperCase()}'),
-            currentAccountPicture: const CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 40, color: Colors.blue),
-            ),
+      width: 270,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(15)),
+      ),
+      elevation: 8,
+      shadowColor: Colors.black.withOpacity(0.3),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Theme.of(context).colorScheme.primary.withOpacity(0.05),
+              Theme.of(context).colorScheme.primary.withOpacity(0.02),
+              Colors.transparent,
+            ],
           ),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 30),
+            // Header mejorado
+            _buildUserHeader(context),
 
-          // Opciones específicas por rol
-          _buildRoleSpecificOptions(viewModel, selectedIndex, context),
+            // Opciones específicas por rol
+            Expanded(
+              child: _buildRoleSpecificOptions(
+                viewModel,
+                selectedIndex,
+                context,
+              ),
+            ),
 
-          const Spacer(),
-          const Divider(),
-          _buildSettingsTile(context),
-          _buildLogoutTile(context),
+            // Footer con configuración y logout
+            _buildFooter(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserHeader(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(30),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            Theme.of(context).colorScheme.primary.withOpacity(0.05),
+          ],
+        ),
+        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(20)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Avatar y nombre
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.of(context).colorScheme.primary,
+                      Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                    ],
+                  ),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: CircleAvatar(
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primary.withOpacity(0.1),
+                    radius: 24,
+                    child: Icon(
+                      Icons.person,
+                      size: 28,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${user.nombre} ${user.apellidoPaterno}',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        user.tipoUsuario?.toUpperCase() ?? 'USUARIO',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -46,58 +160,143 @@ class Sidebar extends StatelessWidget {
     int selectedIndex,
     BuildContext context,
   ) {
-    final onMenuTap = () => context.pop(); // Cerrar drawer al seleccionar
+    final onMenuTap = () => context.pop();
+
+    Widget optionsWidget;
 
     switch (user.tipoUsuario) {
       case 'director':
-        return AdminSidebarOptions(
+        optionsWidget = AdminSidebarOptions(
           viewModel: viewModel,
           selectedIndex: selectedIndex,
           onMenuTap: onMenuTap,
         );
-
+        break;
       case 'estudiante':
-        return StudentSidebarOptions(
+        optionsWidget = StudentSidebarOptions(
           viewModel: viewModel,
           selectedIndex: selectedIndex,
           onMenuTap: onMenuTap,
         );
-
+        break;
       case 'docente':
-        return TeacherSidebarOptions(
+        optionsWidget = TeacherSidebarOptions(
           viewModel: viewModel,
           selectedIndex: selectedIndex,
           onMenuTap: onMenuTap,
         );
-
+        break;
       default:
-        return const SizedBox.shrink();
+        optionsWidget = const SizedBox.shrink();
     }
-  }
 
-  ListTile _buildLogoutTile(BuildContext context) {
-    return ListTile(
-      leading: const Icon(Icons.logout, color: Colors.red),
-      title: const Text('Cerrar sesión', style: TextStyle(color: Colors.red)),
-      onTap: () async {
-        await _logout(context);
-      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: optionsWidget,
     );
   }
 
-  ListTile _buildSettingsTile(BuildContext context) {
-    return ListTile(
-      leading: const Icon(Icons.settings),
-      title: const Text('Configuración'),
-      onTap: () {
-        // Navegar a la pantalla de configuración
-        context.pop(); // Cerrar el drawer
-        final viewModel = Provider.of<DashboardViewModel>(
-          context,
-          listen: false,
-        );
-        viewModel.changeTab(2);
-      },
+  Widget _buildFooter(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).dividerColor.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Column(
+        children: [
+          _buildSettingsTile(context),
+          const SizedBox(height: 8),
+          _buildLogoutTile(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLogoutTile(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.red.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: Colors.red.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.logout_rounded,
+            size: 20,
+            color: Colors.red.shade600,
+          ),
+        ),
+        title: Text(
+          'Cerrar sesión',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Colors.red.shade600,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios_rounded,
+          size: 16,
+          color: Colors.red.shade600.withOpacity(0.6),
+        ),
+        onTap: () => _logout(context),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
+  Widget _buildSettingsTile(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        leading: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.settings_rounded,
+            size: 20,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        title: Text(
+          'Configuración',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios_rounded,
+          size: 16,
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+        ),
+        onTap: () {
+          context.pop();
+          final viewModel = Provider.of<DashboardViewModel>(
+            context,
+            listen: false,
+          );
+          viewModel.changeTab(2);
+        },
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
     );
   }
 

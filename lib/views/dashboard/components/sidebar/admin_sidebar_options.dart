@@ -27,7 +27,7 @@ class AdminSidebarOptions extends StatelessWidget {
           context: context,
           index: 1,
           icon: Icons.person,
-          title: 'Mi Perfil Admin',
+          title: 'Mi Perfil',
         ),
         _buildListTile(
           context: context,

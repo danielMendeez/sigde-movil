@@ -55,10 +55,9 @@ class FormFooter extends StatelessWidget {
           primaryLink!.text,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.green[700],
+            color: Colors.green[600],
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            decoration: TextDecoration.underline,
           ),
         ),
       ),
@@ -78,9 +77,8 @@ class FormFooter extends StatelessWidget {
             child: Text(
               link.text,
               style: TextStyle(
-                color: Colors.green[600],
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
+                color: Colors.black.withOpacity(0.6),
+                fontSize: 12,
                 decoration: TextDecoration.underline,
               ),
             ),

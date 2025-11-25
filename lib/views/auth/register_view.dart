@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sigde/viewmodels/auth/register_viewmodel.dart';
-import 'package:sigde/views/components/layout/form_header.dart';
 import 'package:sigde/views/components/layout/form_footer.dart';
 import 'package:sigde/views/components/forms/register_form.dart';
 import 'package:sigde/views/components/buttons/primary_button.dart';
@@ -75,9 +74,7 @@ class _RegisterViewState extends State<RegisterView> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
-                _buildHeader(),
-                const SizedBox(height: 32),
+                const SizedBox(height: 10),
                 _buildRegisterForm(viewModel),
                 const SizedBox(height: 24),
                 _buildRegisterButton(viewModel),
@@ -88,15 +85,6 @@ class _RegisterViewState extends State<RegisterView> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return const FormHeader(
-      title: 'Crear Cuenta',
-      subtitle: 'Regístrate para comenzar',
-      imagePath: 'assets/images/icon_256.png',
-      imageSize: 70,
     );
   }
 

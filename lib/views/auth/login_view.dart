@@ -11,6 +11,7 @@ import 'package:sigde/views/components/buttons/primary_button.dart';
 import 'package:sigde/views/components/feedback/error_message.dart';
 import 'package:sigde/views/legal/privacy_policy_modal.dart';
 import 'package:sigde/views/legal/terms_of_service_modal.dart';
+import 'package:flutter/cupertino.dart';
 
 class LoginView extends StatefulWidget {
   final String? successMessage;
@@ -86,7 +87,7 @@ class _LoginViewState extends State<LoginView> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 40),
+                const SizedBox(height: 5),
                 _buildHeader(),
                 const SizedBox(height: 40),
                 _buildLoginForm(viewModel),
@@ -107,8 +108,8 @@ class _LoginViewState extends State<LoginView> {
     return const FormHeader(
       title: 'Bienvenido a SIGDE',
       subtitle: 'Inicia sesión en tu cuenta',
-      imagePath: 'assets/images/icon_256.png',
-      imageSize: 80,
+      imagePath: 'assets/images/uth.png',
+      imageSize: 300,
     );
   }
 
@@ -132,27 +133,7 @@ class _LoginViewState extends State<LoginView> {
         if (user != null && context.mounted) {
           await authViewModel.setUser(user);
 
-          // Después de login exitoso, preguntar si desea activar biometría
-          final wantsBiometric = await showDialog<bool>(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: const Text("Activar inicio con huella/rostro"),
-              content: const Text(
-                "¿Deseas habilitar el inicio de sesión biométrico "
-                "para futuras veces?",
-              ),
-              actions: [
-                TextButton(
-                  child: const Text("No"),
-                  onPressed: () => Navigator.pop(context, false),
-                ),
-                TextButton(
-                  child: const Text("Sí"),
-                  onPressed: () => Navigator.pop(context, true),
-                ),
-              ],
-            ),
-          );
+          final wantsBiometric = await _showAlertDialogMaterial(context);
 
           // Si presiona "Sí", guardamos la preferencia
           if (wantsBiometric == true) {
@@ -184,6 +165,107 @@ class _LoginViewState extends State<LoginView> {
         FooterLink(text: 'Términos de servicio', onTap: _onTermsOfService),
       ],
       showDivider: true,
+    );
+  }
+
+  Future<bool?> _showAlertDialogMaterial(BuildContext context) {
+    return showGeneralDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: 'Alert',
+      transitionDuration: const Duration(milliseconds: 280),
+      pageBuilder: (_, _, _) {
+        return const SizedBox.shrink();
+      },
+      transitionBuilder: (ctx, anim, _, _) {
+        return Transform.scale(
+          scale: Curves.easeOutBack.transform(anim.value),
+          child: Opacity(
+            opacity: anim.value,
+            child: Dialog(
+              insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: _DialogContent(),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _DialogContent extends StatelessWidget {
+  const _DialogContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.green.withOpacity(0.15),
+            shape: BoxShape.circle,
+          ),
+          padding: const EdgeInsets.all(18),
+          child: Icon(Icons.fingerprint, size: 48, color: Colors.green[700]),
+        ),
+        const SizedBox(height: 20),
+        Text(
+          "¿Habilitar biométricos?",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.green[800],
+          ),
+        ),
+        const SizedBox(height: 14),
+        Text(
+          "¿Deseas activar el inicio de sesión con huella o reconocimiento facial para futuros accesos?",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 16, color: Colors.grey[700], height: 1.4),
+        ),
+        const SizedBox(height: 28),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.green[700],
+                  side: BorderSide(color: Colors.green[400]!),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text("No, gracias"),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[600],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text("Sí, habilitar"),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
