@@ -20,12 +20,20 @@ import 'package:sigde/services/carta_presentacion/carta_presentacion_service_imp
 import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_presentacion/ver_carta_presentacion_viewmodel.dart';
 
+// Servicios - Carta de Aceptación
+import 'package:sigde/services/carta_aceptacion/carta_aceptacion_service.dart';
+import 'package:sigde/services/carta_aceptacion/carta_aceptacion_service_implementation.dart';
+
+// ViewModels - Carta de Aceptación
+import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewmodel.dart';
+
 final GetIt getIt = GetIt.instance;
 
 void setupDependencies() {
   _setupServices();
   _setupEstadiaViewModels();
   _setupCartaPresentacionViewModels();
+  _setupCartasAceptacionViewModels();
 }
 
 void _setupServices() {
@@ -37,6 +45,10 @@ void _setupServices() {
 
   getIt.registerSingleton<CartaPresentacionService>(
     CartaPresentacionServiceImplementation(getIt<ApiClient>()),
+  );
+
+  getIt.registerSingleton<CartaAceptacionService>(
+    CartaAceptacionServiceImplementation(getIt<ApiClient>()),
   );
 }
 
@@ -64,5 +76,11 @@ void _setupCartaPresentacionViewModels() {
   );
   getIt.registerFactory<VerCartaPresentacionViewModel>(
     () => VerCartaPresentacionViewModel(getIt<CartaPresentacionService>()),
+  );
+}
+
+void _setupCartasAceptacionViewModels() {
+  getIt.registerFactory<ListarCartasAceptacionViewModel>(
+    () => ListarCartasAceptacionViewModel(getIt<CartaAceptacionService>()),
   );
 }

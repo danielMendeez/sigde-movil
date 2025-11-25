@@ -8,6 +8,7 @@ import 'components/settings_content.dart';
 import 'package:sigde/models/user.dart';
 import 'package:sigde/views/estadia/listar_estadias_view.dart';
 import 'package:sigde/views/carta_presentacion/listar_cartas_presentacion_view.dart';
+import 'package:sigde/views/carta_aceptacion/listar_cartas_aceptacion_view.dart';
 
 class DashboardView extends StatefulWidget {
   final User user;
@@ -76,6 +77,11 @@ class _DashboardViewState extends State<DashboardView> {
       case 4:
         return ListarCartasPresentacionView(
           key: const ValueKey('listar-cartas-presentacion'),
+          token: widget.user.token,
+        );
+      case 5:
+        return ListarCartasAceptacionView(
+          key: const ValueKey('listar-cartas-aceptacion'),
           token: widget.user.token,
         );
       default:

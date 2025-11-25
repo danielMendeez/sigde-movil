@@ -33,36 +33,57 @@ class ApiClient {
   Future<Map<String, dynamic>> get(
     String path, {
     Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
   }) async {
     try {
-      final response = await _dio.get(path, queryParameters: queryParameters);
+      final options = Options(headers: headers);
+      final response = await _dio.get(
+        path,
+        queryParameters: queryParameters,
+        options: options,
+      );
       return response.data;
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
   }
 
-  Future<Map<String, dynamic>> post(String path, {dynamic data}) async {
+  Future<Map<String, dynamic>> post(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
     try {
-      final response = await _dio.post(path, data: data);
+      final options = Options(headers: headers);
+      final response = await _dio.post(path, data: data, options: options);
       return response.data;
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
   }
 
-  Future<Map<String, dynamic>> put(String path, {dynamic data}) async {
+  Future<Map<String, dynamic>> put(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
     try {
-      final response = await _dio.put(path, data: data);
+      final options = Options(headers: headers);
+      final response = await _dio.put(path, data: data, options: options);
       return response.data;
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
   }
 
-  Future<Map<String, dynamic>> delete(String path, {dynamic data}) async {
+  Future<Map<String, dynamic>> delete(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
     try {
-      final response = await _dio.delete(path, data: data);
+      final options = Options(headers: headers);
+      final response = await _dio.delete(path, data: data, options: options);
       return response.data;
     } on DioException catch (e) {
       throw _handleDioError(e);

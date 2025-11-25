@@ -101,7 +101,7 @@ class _VerCartaPresentacionViewContentState
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Solicitar Firma'),
+        title: const Text('Firmar Carta de Presentación'),
         content: const Text(
           '¿Deseas firmar la carta de presentación como director?',
         ),
@@ -122,7 +122,7 @@ class _VerCartaPresentacionViewContentState
                 ),
               );
             },
-            child: const Text('Firmar Carta de Presentación'),
+            child: const Text('Firmar'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               foregroundColor: Colors.white,
@@ -419,8 +419,8 @@ class _VerCartaPresentacionViewContentState
           Expanded(
             child: ElevatedButton.icon(
               onPressed: _solicitarFirma,
-              icon: const Icon(Icons.assignment_turned_in),
-              label: const Text('Firmar Carta de Presentación'),
+              icon: const Icon(Icons.draw),
+              label: const Text('Firmar'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,

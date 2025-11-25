@@ -41,6 +41,12 @@ class AdminSidebarOptions extends StatelessWidget {
           icon: Icons.document_scanner,
           title: 'Cartas de Presentación',
         ),
+        _buildListTile(
+          context: context,
+          index: 5,
+          icon: Icons.document_scanner_outlined,
+          title: 'Cartas de aceptación',
+        ),
         // Puedes agregar más opciones específicas de admin
       ],
     );

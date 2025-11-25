@@ -19,6 +19,9 @@ import 'package:sigde/viewmodels/estadia/eliminar_estadia_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_presentacion/ver_carta_presentacion_viewmodel.dart';
 
+// ViewModels de Carta de Aceptación
+import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewmodel.dart';
+
 class AppProviders {
   // PROVIDERS GLOBALES
   static List<ChangeNotifierProvider<ChangeNotifier>> get globalProviders => [
@@ -61,6 +64,14 @@ class AppProviders {
     ),
     ChangeNotifierProvider<VerCartaPresentacionViewModel>(
       create: (_) => getIt<VerCartaPresentacionViewModel>(),
+    ),
+  ];
+
+  // PROVIDERS DE CARTA DE ACEPTACIÓN
+  static List<ChangeNotifierProvider<ChangeNotifier>>
+  get cartaAceptacionProviders => [
+    ChangeNotifierProvider<ListarCartasAceptacionViewModel>(
+      create: (_) => getIt<ListarCartasAceptacionViewModel>(),
     ),
   ];
 
@@ -113,6 +124,15 @@ class AppProviders {
     ),
   ];
 
+  // CARTA DE ACEPTACIÓN
+  // Pantalla: Listar Cartas de Aceptación
+  static List<ChangeNotifierProvider<ChangeNotifier>>
+  get listarCartasAceptacionProviders => [
+    ChangeNotifierProvider<ListarCartasAceptacionViewModel>(
+      create: (_) => getIt<ListarCartasAceptacionViewModel>(),
+    ),
+  ];
+
   // WRAPPERS PARA PANTALLAS CON PROVIDERS ESPECIFICOS
   // ESTADIA
   static Widget wrapWithListarEstadiasProviders({
@@ -162,6 +182,17 @@ class AppProviders {
   }) {
     return MultiProvider(
       providers: verEditarCartaPresentacionProviders,
+      child: TokenWrapper(token: token, child: child),
+    );
+  }
+
+  // CARTA DE ACEPTACIÓN
+  static Widget wrapWithListarCartasAceptacionProviders({
+    required String token,
+    required Widget child,
+  }) {
+    return MultiProvider(
+      providers: listarCartasAceptacionProviders,
       child: TokenWrapper(token: token, child: child),
     );
   }

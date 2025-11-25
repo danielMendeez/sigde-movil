@@ -48,7 +48,7 @@ class Sidebar extends StatelessWidget {
     final onMenuTap = () => context.pop(); // Cerrar drawer al seleccionar
 
     switch (user.tipoUsuario) {
-      case 'admin':
+      case 'director':
         return AdminSidebarOptions(
           viewModel: viewModel,
           selectedIndex: selectedIndex,
