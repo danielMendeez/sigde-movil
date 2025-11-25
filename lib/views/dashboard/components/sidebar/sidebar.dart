@@ -34,6 +34,7 @@ class Sidebar extends StatelessWidget {
 
           const Spacer(),
           const Divider(),
+          _buildSettingsTile(context),
           _buildLogoutTile(context),
         ],
       ),
@@ -80,6 +81,22 @@ class Sidebar extends StatelessWidget {
       title: const Text('Cerrar sesión', style: TextStyle(color: Colors.red)),
       onTap: () async {
         await _logout(context);
+      },
+    );
+  }
+
+  ListTile _buildSettingsTile(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.settings),
+      title: const Text('Configuración'),
+      onTap: () {
+        // Navegar a la pantalla de configuración
+        context.pop(); // Cerrar el drawer
+        final viewModel = Provider.of<DashboardViewModel>(
+          context,
+          listen: false,
+        );
+        viewModel.changeTab(2);
       },
     );
   }

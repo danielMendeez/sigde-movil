@@ -29,12 +29,6 @@ class TeacherSidebarOptions extends StatelessWidget {
           icon: Icons.person,
           title: 'Mi Perfil Docente',
         ),
-        _buildListTile(
-          context: context,
-          index: 2,
-          icon: Icons.settings,
-          title: 'Configuración',
-        ),
         // Más opciones docentes...
       ],
     );
