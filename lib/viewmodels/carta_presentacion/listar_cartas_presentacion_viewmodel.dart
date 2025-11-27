@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
-import 'package:sigde/models/carta_presentacion/listar_cartas_presentacion_request.dart';
 import 'package:sigde/services/carta_presentacion/carta_presentacion_service.dart';
 
 class ListarCartasPresentacionViewModel with ChangeNotifier {
@@ -23,9 +22,8 @@ class ListarCartasPresentacionViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      final request = ListarCartasPresentacionRequest(token: token);
       _cartasPresentacion = await _cartaPresentacionService
-          .listarCartasPresentacion(request);
+          .listarCartasPresentacion(token);
       _errorMessage = '';
     } catch (e) {
       _errorMessage = e.toString();

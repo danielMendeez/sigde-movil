@@ -1,7 +1,6 @@
 import 'package:sigde/services/api_client.dart';
 import 'package:sigde/services/carta_presentacion/carta_presentacion_service.dart';
 import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
-import 'package:sigde/models/carta_presentacion/listar_cartas_presentacion_request.dart';
 import 'package:sigde/models/carta_presentacion/ver_carta_presentacion_request.dart';
 
 class CartaPresentacionException implements Exception {
@@ -19,18 +18,15 @@ class CartaPresentacionServiceImplementation
   CartaPresentacionServiceImplementation(this._apiClient);
 
   @override
-  Future<List<CartaPresentacion>> listarCartasPresentacion(
-    ListarCartasPresentacionRequest request,
-  ) async {
+  Future<List<CartaPresentacion>> listarCartasPresentacion(String token) async {
     try {
       final response = await _apiClient.post(
-        '/cartaPres/listaCartasPres',
-        data: request.toJson(),
+        '/carta-pres/listarCartas',
+        headers: {'Authorization': 'Bearer $token'},
       );
 
-      if (response.containsKey('cartasPres') &&
-          response['cartasPres'] is List) {
-        final List<dynamic> cartasJson = response['cartasPres'];
+      if (response.containsKey('cartas') && response['cartas'] is List) {
+        final List<dynamic> cartasJson = response['cartas'];
 
         final cartas = cartasJson.map((json) {
           return CartaPresentacion.fromJson(json);

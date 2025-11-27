@@ -240,7 +240,10 @@ class _CartaPresentacionCard extends StatelessWidget {
               const SizedBox(height: 8),
 
               // Información de la carta
-              _InfoRow(icon: Icons.person, text: 'Tutor ID: ${carta.tutorId}'),
+              _InfoRow(
+                icon: Icons.person,
+                text: 'Director ID: ${carta.directorId}',
+              ),
               _InfoRow(
                 icon: Icons.school,
                 text: 'Firma de director: ${carta.firmadaDirector}',
@@ -250,20 +253,6 @@ class _CartaPresentacionCard extends StatelessWidget {
                 text:
                     'Fecha de emisión: ${carta.fechaEmision.toLocal().toIso8601String().split('T').first}',
               ),
-
-              // Texto adicional (si existe)
-              if (carta.textoAdicional.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Text(
-                  'Texto adicional: ${carta.textoAdicional}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
 
               // Ruta del PDF y estado de firma
               const SizedBox(height: 8),

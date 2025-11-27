@@ -177,12 +177,6 @@ class _VerCartaPresentacionViewContentState
                 _buildEstadoFirmaSection(),
                 const SizedBox(height: 20),
 
-                // Sección de texto adicional
-                if (widget.carta.textoAdicional.isNotEmpty) ...[
-                  _buildTextoAdicionalSection(),
-                  const SizedBox(height: 20),
-                ],
-
                 // Botones de acción
                 _buildActionButtons(),
               ],
@@ -212,7 +206,10 @@ class _VerCartaPresentacionViewContentState
             const SizedBox(height: 12),
             _buildInfoRow('ID de la Carta', widget.carta.id.toString()),
             _buildInfoRow('ID de Estadía', widget.carta.estadiaId.toString()),
-            _buildInfoRow('ID del Tutor', widget.carta.tutorId.toString()),
+            _buildInfoRow(
+              'ID del Director',
+              widget.carta.directorId.toString(),
+            ),
             _buildInfoRow(
               'Fecha de Emisión',
               _formatDate(widget.carta.fechaEmision),
@@ -355,42 +352,6 @@ class _VerCartaPresentacionViewContentState
                     ),
                   ),
                 ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextoAdicionalSection() {
-    return Card(
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Texto Adicional',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.purple,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                border: Border.all(color: Colors.grey[300]!),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                widget.carta.textoAdicional,
-                style: const TextStyle(fontSize: 14, height: 1.4),
               ),
             ),
           ],
