@@ -1,39 +1,30 @@
 class RegistrarEstadiaRequest {
-  final String token;
   final int alumnoId;
-  final int idDocente;
   final int empresaId;
+  final int carreraId;
+  final int tutorId;
   final String asesorExterno;
   final String proyectoNombre;
-  final int duracionSemanas;
-  final DateTime fechaInicio;
-  final DateTime fechaFin;
-  final String apoyo;
+  final int apoyo;
 
   RegistrarEstadiaRequest({
-    required this.token,
     required this.alumnoId,
-    required this.idDocente,
     required this.empresaId,
+    required this.carreraId,
+    required this.tutorId,
     required this.asesorExterno,
     required this.proyectoNombre,
-    required this.duracionSemanas,
-    required this.fechaInicio,
-    required this.fechaFin,
     required this.apoyo,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'token': token,
       'alumno_id': alumnoId,
-      'id_docente': idDocente,
       'empresa_id': empresaId,
+      'carrera_id': carreraId,
+      'tutor_id': tutorId,
       'asesor_externo': asesorExterno,
       'proyecto_nombre': proyectoNombre,
-      'duracion_semanas': duracionSemanas,
-      'fecha_inicio': fechaInicio.toIso8601String(),
-      'fecha_fin': fechaFin.toIso8601String(),
       'apoyo': apoyo,
     };
   }

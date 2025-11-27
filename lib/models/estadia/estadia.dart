@@ -1,14 +1,13 @@
 class Estadia {
   final int id;
   final int alumnoId;
-  final int idDocente;
   final int empresaId;
+  final int carreraId;
+  final int tutorId;
   final String asesorExterno;
   final String proyectoNombre;
   final int duracionSemanas;
-  final DateTime fechaInicio;
-  final DateTime fechaFin;
-  final String apoyo;
+  final int apoyo;
   final String estatus;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -16,13 +15,12 @@ class Estadia {
   Estadia({
     required this.id,
     required this.alumnoId,
-    required this.idDocente,
     required this.empresaId,
+    required this.carreraId,
+    required this.tutorId,
     required this.asesorExterno,
     required this.proyectoNombre,
     required this.duracionSemanas,
-    required this.fechaInicio,
-    required this.fechaFin,
     required this.apoyo,
     required this.estatus,
     required this.createdAt,
@@ -33,13 +31,12 @@ class Estadia {
     return Estadia(
       id: json['id'] ?? 0,
       alumnoId: json['alumno_id'] ?? 0,
-      idDocente: json['id_docente'] ?? 0,
+      carreraId: json['carrera_id'] ?? 0,
+      tutorId: json['tutor_id'] ?? 0,
       empresaId: json['empresa_id'] ?? 0,
       asesorExterno: json['asesor_externo'] ?? '',
       proyectoNombre: json['proyecto_nombre'] ?? '',
       duracionSemanas: json['duracion_semanas'] ?? 0,
-      fechaInicio: DateTime.parse(json['fecha_inicio']),
-      fechaFin: DateTime.parse(json['fecha_fin']),
       apoyo: json['apoyo'] ?? '',
       estatus: json['estatus'] ?? '',
       createdAt: DateTime.parse(json['created_at']),
@@ -51,13 +48,12 @@ class Estadia {
     return {
       'id': id,
       'alumno_id': alumnoId,
-      'id_docente': idDocente,
+      'carrera_id': carreraId,
+      'tutor_id': tutorId,
       'empresa_id': empresaId,
       'asesor_externo': asesorExterno,
       'proyecto_nombre': proyectoNombre,
       'duracion_semanas': duracionSemanas,
-      'fecha_inicio': fechaInicio.toIso8601String(),
-      'fecha_fin': fechaFin.toIso8601String(),
       'apoyo': apoyo,
       'estatus': estatus,
       'created_at': createdAt.toIso8601String(),

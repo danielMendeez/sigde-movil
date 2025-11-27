@@ -46,15 +46,19 @@ class EstadiaServiceImplementation implements EstadiaService {
   }
 
   @override
-  Future<Estadia> registrarEstadia(RegistrarEstadiaRequest request) async {
+  Future<Estadia> registrarEstadia(
+    RegistrarEstadiaRequest request,
+    String token,
+  ) async {
     try {
       final response = await _apiClient.post(
-        '/estadia/register',
+        '/estadias/registrar',
         data: request.toJson(),
+        headers: {'Authorization': 'Bearer $token'},
       );
 
-      if (response.containsKey('estadia')) {
-        return Estadia.fromJson(response['estadia']);
+      if (response.containsKey('data')) {
+        return Estadia.fromJson(response['data']);
       } else {
         throw EstadiaException(
           'Formato de respuesta inválido: no se encontró "estadia"',

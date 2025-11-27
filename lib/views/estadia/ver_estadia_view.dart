@@ -190,11 +190,6 @@ class _EstadiaDetalleWidget extends StatelessWidget {
                 valor: estadia.alumnoId.toString(),
               ),
               _InfoItem(
-                icon: Icons.school,
-                label: 'ID Docente:',
-                valor: estadia.idDocente.toString(),
-              ),
-              _InfoItem(
                 icon: Icons.business,
                 label: 'ID Empresa:',
                 valor: estadia.empresaId.toString(),
@@ -226,30 +221,7 @@ class _EstadiaDetalleWidget extends StatelessWidget {
               _InfoItem(
                 icon: Icons.help_outline,
                 label: 'Apoyo:',
-                valor: estadia.apoyo,
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // Fechas
-          _buildSeccion(
-            titulo: 'Fechas',
-            children: [
-              _InfoItem(
-                icon: Icons.calendar_today,
-                label: 'Fecha Inicio:',
-                valor: _formatDate(estadia.fechaInicio),
-              ),
-              _InfoItem(
-                icon: Icons.event_available,
-                label: 'Fecha Fin:',
-                valor: _formatDate(estadia.fechaFin),
-              ),
-              _InfoItem(
-                icon: Icons.schedule,
-                label: 'Días restantes:',
-                valor: _calcularDiasRestantes(estadia.fechaFin),
+                valor: estadia.apoyo.toString(),
               ),
             ],
           ),
@@ -372,19 +344,6 @@ class _EstadiaDetalleWidget extends StatelessWidget {
 
   String _formatDateTime(DateTime date) {
     return '${_formatDate(date)} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
-  }
-
-  String _calcularDiasRestantes(DateTime fechaFin) {
-    final now = DateTime.now();
-    final diferencia = fechaFin.difference(now);
-
-    if (diferencia.inDays < 0) {
-      return 'Finalizada (${diferencia.inDays.abs()} días atrás)';
-    } else if (diferencia.inDays == 0) {
-      return 'Finaliza hoy';
-    } else {
-      return '${diferencia.inDays} días';
-    }
   }
 }
 

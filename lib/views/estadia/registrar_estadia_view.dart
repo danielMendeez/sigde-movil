@@ -33,82 +33,40 @@ class _RegistrarEstadiaViewContentState
 
   // Controladores para los campos del formulario
   final _alumnoIdController = TextEditingController();
-  final _idDocenteController = TextEditingController();
   final _empresaIdController = TextEditingController();
+  final _carreraIdController = TextEditingController();
+  final _tutorIdController = TextEditingController();
   final _asesorExternoController = TextEditingController();
   final _proyectoNombreController = TextEditingController();
-  final _duracionSemanasController = TextEditingController();
   final _apoyoController = TextEditingController();
-
-  DateTime _fechaInicio = DateTime.now();
-  DateTime _fechaFin = DateTime.now().add(const Duration(days: 30));
 
   @override
   void initState() {
     super.initState();
-    // Inicializar fechas por defecto
-    _fechaInicio = DateTime.now();
-    _fechaFin = DateTime.now().add(const Duration(days: 30));
   }
 
   @override
   void dispose() {
     // Limpiar controladores
     _alumnoIdController.dispose();
-    _idDocenteController.dispose();
     _empresaIdController.dispose();
+    _carreraIdController.dispose();
+    _tutorIdController.dispose();
     _asesorExternoController.dispose();
     _proyectoNombreController.dispose();
-    _duracionSemanasController.dispose();
     _apoyoController.dispose();
     super.dispose();
-  }
-
-  Future<void> _seleccionarFechaInicio(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaInicio,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null && picked != _fechaInicio) {
-      setState(() {
-        _fechaInicio = picked;
-        // Ajustar fecha fin si es anterior a fecha inicio
-        if (_fechaFin.isBefore(picked)) {
-          _fechaFin = picked.add(const Duration(days: 30));
-        }
-      });
-    }
-  }
-
-  Future<void> _seleccionarFechaFin(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _fechaFin,
-      firstDate: _fechaInicio,
-      lastDate: DateTime(2100),
-    );
-    if (picked != null && picked != _fechaFin) {
-      setState(() {
-        _fechaFin = picked;
-      });
-    }
   }
 
   void _limpiarFormulario() {
     _formKey.currentState?.reset();
     _alumnoIdController.clear();
-    _idDocenteController.clear();
     _empresaIdController.clear();
+    _carreraIdController.clear();
+    _tutorIdController.clear();
     _asesorExternoController.clear();
     _proyectoNombreController.clear();
-    _duracionSemanasController.clear();
     _apoyoController.clear();
-    setState(() {
-      _fechaInicio = DateTime.now();
-      _fechaFin = DateTime.now().add(const Duration(days: 30));
-    });
     context.read<RegistrarEstadiaViewModel>().resetState();
   }
 
@@ -118,20 +76,16 @@ class _RegistrarEstadiaViewContentState
 
       // Crear request
       final request = RegistrarEstadiaRequest(
-        token: _token,
         alumnoId: int.parse(_alumnoIdController.text),
-        idDocente: int.parse(_idDocenteController.text),
         empresaId: int.parse(_empresaIdController.text),
+        carreraId: int.parse(_carreraIdController.text),
+        tutorId: int.parse(_tutorIdController.text),
         asesorExterno: _asesorExternoController.text,
         proyectoNombre: _proyectoNombreController.text,
-        duracionSemanas: int.parse(_duracionSemanasController.text),
-        fechaInicio: _fechaInicio,
-        fechaFin: _fechaFin,
-        apoyo: _apoyoController.text,
+        apoyo: int.parse(_apoyoController.text),
       );
 
-      final success = await viewModel.registrarEstadia(request);
-
+      final success = await viewModel.registrarEstadia(request, _token);
       if (success && viewModel.success) {
         // Mostrar mensaje de éxito
         _mostrarDialogoExito(context);
@@ -239,24 +193,6 @@ class _RegistrarEstadiaViewContentState
 
                   // Campo: ID Docente
                   _buildTextField(
-                    controller: _idDocenteController,
-                    label: 'ID Docente',
-                    hintText: 'Ingrese el ID del docente',
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese el ID del docente';
-                      }
-                      if (int.tryParse(value) == null) {
-                        return 'Ingrese un número válido';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Campo: ID Empresa
-                  _buildTextField(
                     controller: _empresaIdController,
                     label: 'ID Empresa',
                     hintText: 'Ingrese el ID de la empresa',
@@ -273,6 +209,38 @@ class _RegistrarEstadiaViewContentState
                   ),
                   const SizedBox(height: 16),
 
+                  // Campo: ID Empresa
+                  _buildTextField(
+                    controller: _carreraIdController,
+                    label: 'ID Carrera',
+                    hintText: 'Ingrese el ID de la carrera',
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese el ID de la carrera';
+                      }
+                      if (int.tryParse(value) == null) {
+                        return 'Ingrese un número válido';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Campo: Asesor Externo
+                  _buildTextField(
+                    controller: _tutorIdController,
+                    label: 'ID Tutor',
+                    hintText: 'Ingrese el ID del tutor',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor ingrese el ID del tutor';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
                   // Campo: Asesor Externo
                   _buildTextField(
                     controller: _asesorExternoController,
@@ -280,7 +248,7 @@ class _RegistrarEstadiaViewContentState
                     hintText: 'Ingrese el nombre del asesor externo',
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese el nombre del asesor';
+                        return 'Por favor ingrese el nombre del asesor externo';
                       }
                       return null;
                     },
@@ -302,50 +270,13 @@ class _RegistrarEstadiaViewContentState
                   ),
                   const SizedBox(height: 16),
 
-                  // Campo: Duración en Semanas
-                  _buildTextField(
-                    controller: _duracionSemanasController,
-                    label: 'Duración (semanas)',
-                    hintText: 'Ingrese la duración en semanas',
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese la duración';
-                      }
-                      if (int.tryParse(value) == null) {
-                        return 'Ingrese un número válido';
-                      }
-                      if (int.parse(value) <= 0) {
-                        return 'La duración debe ser mayor a 0';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Fecha Inicio
-                  _buildDateField(
-                    context: context,
-                    label: 'Fecha Inicio',
-                    selectedDate: _fechaInicio,
-                    onTap: () => _seleccionarFechaInicio(context),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Fecha Fin
-                  _buildDateField(
-                    context: context,
-                    label: 'Fecha Fin',
-                    selectedDate: _fechaFin,
-                    onTap: () => _seleccionarFechaFin(context),
-                  ),
-                  const SizedBox(height: 16),
-
                   // Campo: Apoyo
                   _buildTextField(
                     controller: _apoyoController,
                     label: 'Tipo de Apoyo',
-                    hintText: 'Describa el tipo de apoyo',
+                    hintText:
+                        'Describa el tipo de apoyo', // 1 = si hay apoyo, 0 = no hay apoyo
+                    keyboardType: TextInputType.number,
                     maxLines: 3,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -400,49 +331,6 @@ class _RegistrarEstadiaViewContentState
             ),
           ),
           validator: validator,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDateField({
-    required BuildContext context,
-    required String label,
-    required DateTime selectedDate,
-    required VoidCallback onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
-        ),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: onTap,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.calendar_today, color: Colors.grey),
-                const SizedBox(width: 12),
-                Text(
-                  '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-          ),
         ),
       ],
     );

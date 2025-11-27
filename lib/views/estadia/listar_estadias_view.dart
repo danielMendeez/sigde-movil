@@ -248,14 +248,6 @@ class _EstadiaCard extends StatelessWidget {
                     text: 'Duración: ${estadia.duracionSemanas} semanas',
                   ),
                   _InfoRow(
-                    icon: Icons.date_range,
-                    text: 'Inicio: ${_formatDate(estadia.fechaInicio)}',
-                  ),
-                  _InfoRow(
-                    icon: Icons.date_range,
-                    text: 'Fin: ${_formatDate(estadia.fechaFin)}',
-                  ),
-                  _InfoRow(
                     icon: Icons.help_outline,
                     text: 'Apoyo: ${estadia.apoyo}',
                   ),
@@ -289,10 +281,6 @@ class _EstadiaCard extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
-  }
-
   Color _getStatusColor(String estatus) {
     switch (estatus.toLowerCase()) {
       case 'solicitada':
@@ -301,7 +289,9 @@ class _EstadiaCard extends StatelessWidget {
         return Colors.orange;
       case 'aceptada':
         return Colors.green;
-      case 'cancelado':
+      case 'concluida':
+        return Colors.purple;
+      case 'rechazada':
         return Colors.red;
       default:
         return Colors.grey;

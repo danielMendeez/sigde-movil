@@ -19,7 +19,10 @@ class RegistrarEstadiaViewModel with ChangeNotifier {
 
   RegistrarEstadiaViewModel(this._estadiaService);
 
-  Future<bool> registrarEstadia(RegistrarEstadiaRequest request) async {
+  Future<bool> registrarEstadia(
+    RegistrarEstadiaRequest request,
+    String token,
+  ) async {
     _isLoading = true;
     _success = false;
     _errorMessage = '';
@@ -27,7 +30,10 @@ class RegistrarEstadiaViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      _estadiaRegistrada = await _estadiaService.registrarEstadia(request);
+      _estadiaRegistrada = await _estadiaService.registrarEstadia(
+        request,
+        token,
+      );
       _success = true;
       return true;
     } catch (e) {
