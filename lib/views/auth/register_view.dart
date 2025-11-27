@@ -8,6 +8,7 @@ import 'package:sigde/views/components/buttons/primary_button.dart';
 import 'package:sigde/views/components/feedback/error_message.dart';
 import 'package:sigde/views/legal/privacy_policy_modal.dart';
 import 'package:sigde/views/legal/terms_of_service_modal.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -21,10 +22,13 @@ class _RegisterViewState extends State<RegisterView> {
   final _apellidoPaternoController = TextEditingController();
   final _apellidoMaternoController = TextEditingController();
   final _curpController = TextEditingController();
+  final _numSeguridadSocialController = TextEditingController();
+  final _matriculaController = TextEditingController();
   final _correoController = TextEditingController();
   final _telefonoController = TextEditingController();
   final _passwordController = TextEditingController();
   String? _selectedTipoUsuario;
+  bool _isAcceptedTerms = false;
 
   @override
   void dispose() {
@@ -32,6 +36,8 @@ class _RegisterViewState extends State<RegisterView> {
     _apellidoPaternoController.dispose();
     _apellidoMaternoController.dispose();
     _curpController.dispose();
+    _numSeguridadSocialController.dispose();
+    _matriculaController.dispose();
     _correoController.dispose();
     _telefonoController.dispose();
     _passwordController.dispose();
@@ -77,6 +83,8 @@ class _RegisterViewState extends State<RegisterView> {
                 const SizedBox(height: 10),
                 _buildRegisterForm(viewModel),
                 const SizedBox(height: 24),
+                _buildAcceptTermsCheckbox(),
+                const SizedBox(height: 24),
                 _buildRegisterButton(viewModel),
                 _buildViewModelError(viewModel),
                 _buildFooter(),
@@ -94,6 +102,8 @@ class _RegisterViewState extends State<RegisterView> {
       apellidoPaternoController: _apellidoPaternoController,
       apellidoMaternoController: _apellidoMaternoController,
       curpController: _curpController,
+      numSeguridadSocialController: _numSeguridadSocialController,
+      matriculaController: _matriculaController,
       correoController: _correoController,
       telefonoController: _telefonoController,
       passwordController: _passwordController,
@@ -107,15 +117,38 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
+  Widget _buildAcceptTermsCheckbox() {
+    return CheckboxListTile(
+      title: const Text('Acepto los términos y condiciones'),
+      value: _isAcceptedTerms,
+      onChanged: (value) {
+        setState(() {
+          _isAcceptedTerms = value ?? false;
+        });
+      },
+      controlAffinity: ListTileControlAffinity.leading,
+    );
+  }
+
   Widget _buildRegisterButton(RegisterViewModel viewModel) {
     return PrimaryButton(
       text: 'Registrarse',
       onPressed: () async {
+        if (!_isAcceptedTerms) {
+          Fluttertoast.showToast(
+            msg: "Debes aceptar los términos y condiciones para continuar.",
+            toastLength: Toast.LENGTH_LONG,
+          );
+          return;
+        }
+
         final user = await viewModel.register(
           nombre: _nombreController.text,
           apellidoPaterno: _apellidoPaternoController.text,
           apellidoMaterno: _apellidoMaternoController.text,
           curp: _curpController.text,
+          numSeguridadSocial: _numSeguridadSocialController.text,
+          matricula: _matriculaController.text,
           correo: _correoController.text,
           telefono: _telefonoController.text,
           tipoUsuario: _selectedTipoUsuario ?? '',

@@ -8,6 +8,8 @@ class RegisterForm extends StatelessWidget {
   final TextEditingController apellidoPaternoController;
   final TextEditingController apellidoMaternoController;
   final TextEditingController curpController;
+  final TextEditingController numSeguridadSocialController;
+  final TextEditingController matriculaController;
   final TextEditingController correoController;
   final TextEditingController telefonoController;
   final TextEditingController passwordController;
@@ -20,6 +22,8 @@ class RegisterForm extends StatelessWidget {
     required this.apellidoPaternoController,
     required this.apellidoMaternoController,
     required this.curpController,
+    required this.numSeguridadSocialController,
+    required this.matriculaController,
     required this.correoController,
     required this.telefonoController,
     required this.passwordController,
@@ -70,6 +74,26 @@ class RegisterForm extends StatelessWidget {
           prefixIcon: Icons.badge_outlined,
           errorText: viewModel.curpError,
           onChanged: (value) => viewModel.clearCurpError(),
+        ),
+        const SizedBox(height: 16),
+
+        // Número de Seguridad Social
+        CustomTextField(
+          controller: numSeguridadSocialController,
+          labelText: 'Número de Seguridad Social',
+          prefixIcon: Icons.security_outlined,
+          errorText: viewModel.numSeguridadSocialError,
+          onChanged: (value) => viewModel.clearNumSeguridadSocialError(),
+        ),
+        const SizedBox(height: 16),
+
+        // Matrícula
+        CustomTextField(
+          controller: matriculaController,
+          labelText: 'Matrícula',
+          prefixIcon: Icons.school_outlined,
+          errorText: viewModel.matriculaError,
+          onChanged: (value) => viewModel.clearMatriculaError(),
         ),
         const SizedBox(height: 16),
 

@@ -13,6 +13,8 @@ class RegisterViewModel extends ChangeNotifier {
   String? _apellidoPaternoError;
   String? _apellidoMaternoError;
   String? _curpError;
+  String? _numSeguridadSocialError;
+  String? _matriculaError;
   String? _correoError;
   String? _telefonoError;
   String? _tipoUsuarioError;
@@ -24,6 +26,8 @@ class RegisterViewModel extends ChangeNotifier {
   String? get apellidoPaternoError => _apellidoPaternoError;
   String? get apellidoMaternoError => _apellidoMaternoError;
   String? get curpError => _curpError;
+  String? get numSeguridadSocialError => _numSeguridadSocialError;
+  String? get matriculaError => _matriculaError;
   String? get correoError => _correoError;
   String? get telefonoError => _telefonoError;
   String? get tipoUsuarioError => _tipoUsuarioError;
@@ -47,6 +51,16 @@ class RegisterViewModel extends ChangeNotifier {
 
   void clearCurpError() {
     _curpError = null;
+    notifyListeners();
+  }
+
+  void clearNumSeguridadSocialError() {
+    _numSeguridadSocialError = null;
+    notifyListeners();
+  }
+
+  void clearMatriculaError() {
+    _matriculaError = null;
     notifyListeners();
   }
 
@@ -76,6 +90,8 @@ class RegisterViewModel extends ChangeNotifier {
     _apellidoPaternoError = null;
     _apellidoMaternoError = null;
     _curpError = null;
+    _numSeguridadSocialError = null;
+    _matriculaError = null;
     _correoError = null;
     _telefonoError = null;
     _tipoUsuarioError = null;
@@ -89,6 +105,8 @@ class RegisterViewModel extends ChangeNotifier {
     required String apellidoPaterno,
     required String apellidoMaterno,
     required String curp,
+    required String numSeguridadSocial,
+    required String matricula,
     required String correo,
     required String telefono,
     required String tipoUsuario,
@@ -123,6 +141,39 @@ class RegisterViewModel extends ChangeNotifier {
     } else if (curp.length != 18) {
       _curpError = 'La CURP debe tener exactamente 18 caracteres';
       isValid = false;
+    }
+
+    // Validar número de seguridad social
+    if (numSeguridadSocial.isEmpty) {
+      _numSeguridadSocialError =
+          'Por favor ingresa tu número de seguridad social';
+      isValid = false;
+    } else if (numSeguridadSocial.length != 18) {
+      _numSeguridadSocialError =
+          'El número de seguridad social debe tener exactamente 18 caracteres';
+      isValid = false;
+    } else {
+      final nssRegex = RegExp(r'^[0-9]{18}$');
+      if (!nssRegex.hasMatch(numSeguridadSocial)) {
+        _numSeguridadSocialError =
+            'El número de seguridad social debe contener solo números';
+        isValid = false;
+      }
+    }
+
+    // Validar matrícula
+    if (matricula.isEmpty) {
+      _matriculaError = 'Por favor ingresa tu matrícula';
+      isValid = false;
+    } else if (matricula.length != 10) {
+      _matriculaError = 'La matrícula debe tener exactamente 10 caracteres';
+      isValid = false;
+    } else {
+      final matriculaRegex = RegExp(r'^[0-9]{10}$');
+      if (!matriculaRegex.hasMatch(matricula)) {
+        _matriculaError = 'La matrícula debe contener solo números';
+        isValid = false;
+      }
     }
 
     // Validar correo
@@ -172,7 +223,9 @@ class RegisterViewModel extends ChangeNotifier {
     required String apellidoPaterno,
     required String apellidoMaterno,
     required String curp,
+    required String numSeguridadSocial,
     required String correo,
+    required String matricula,
     required String telefono,
     required String tipoUsuario,
     required String password,
@@ -183,7 +236,9 @@ class RegisterViewModel extends ChangeNotifier {
       apellidoPaterno: apellidoPaterno,
       apellidoMaterno: apellidoMaterno,
       curp: curp,
+      numSeguridadSocial: numSeguridadSocial,
       correo: correo,
+      matricula: matricula,
       telefono: telefono,
       tipoUsuario: tipoUsuario,
       password: password,
@@ -201,7 +256,9 @@ class RegisterViewModel extends ChangeNotifier {
         apellidoPaterno: apellidoPaterno,
         apellidoMaterno: apellidoMaterno,
         curp: curp,
+        numSeguridadSocial: numSeguridadSocial,
         correo: correo,
+        matricula: matricula,
         telefono: telefono,
         tipoUsuario: tipoUsuario,
         password: password,
