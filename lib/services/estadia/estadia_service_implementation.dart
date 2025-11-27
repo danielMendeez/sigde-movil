@@ -1,7 +1,6 @@
 import 'estadia_service.dart';
 import 'package:sigde/services/api_client.dart';
 import 'package:sigde/models/estadia/estadia.dart';
-import 'package:sigde/models/estadia/listar_estadias_request.dart';
 import 'package:sigde/models/estadia/registrar_estadia_request.dart';
 import 'package:sigde/models/estadia/ver_estadia_request.dart';
 import 'package:sigde/models/estadia/actualizar_estadia_request.dart';
@@ -21,11 +20,11 @@ class EstadiaServiceImplementation implements EstadiaService {
   EstadiaServiceImplementation(this._apiClient);
 
   @override
-  Future<List<Estadia>> listarEstadias(ListarEstadiasRequest request) async {
+  Future<List<Estadia>> listarEstadias(String token) async {
     try {
       final response = await _apiClient.post(
-        '/estadia/listaEstadias',
-        data: request.toJson(),
+        '/estadias/listaEstadias',
+        headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.containsKey('estadias') && response['estadias'] is List) {

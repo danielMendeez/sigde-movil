@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:sigde/models/estadia/estadia.dart';
-import 'package:sigde/models/estadia/listar_estadias_request.dart';
 import 'package:sigde/services/estadia/estadia_service.dart';
 
 class ListarEstadiasViewModel with ChangeNotifier {
@@ -23,8 +22,7 @@ class ListarEstadiasViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      final request = ListarEstadiasRequest(token: token);
-      _estadias = await _estadiaService.listarEstadias(request);
+      _estadias = await _estadiaService.listarEstadias(token);
       _errorMessage = '';
     } catch (e) {
       _errorMessage = e.toString();
