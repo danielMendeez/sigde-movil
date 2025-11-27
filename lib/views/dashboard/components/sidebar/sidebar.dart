@@ -24,37 +24,20 @@ class Sidebar extends StatelessWidget {
       ),
       elevation: 8,
       shadowColor: Colors.black.withOpacity(0.3),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.primary.withOpacity(0.05),
-              Theme.of(context).colorScheme.primary.withOpacity(0.02),
-              Colors.transparent,
-            ],
+      child: Column(
+        children: [
+          const SizedBox(height: 30),
+          // Header mejorado
+          _buildUserHeader(context),
+
+          // Opciones específicas por rol
+          Expanded(
+            child: _buildRoleSpecificOptions(viewModel, selectedIndex, context),
           ),
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            // Header mejorado
-            _buildUserHeader(context),
 
-            // Opciones específicas por rol
-            Expanded(
-              child: _buildRoleSpecificOptions(
-                viewModel,
-                selectedIndex,
-                context,
-              ),
-            ),
-
-            // Footer con configuración y logout
-            _buildFooter(context),
-          ],
-        ),
+          // Footer con configuración y logout
+          _buildFooter(context),
+        ],
       ),
     );
   }
@@ -62,93 +45,80 @@ class Sidebar extends StatelessWidget {
   Widget _buildUserHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Theme.of(context).colorScheme.primary.withOpacity(0.1),
-            Theme.of(context).colorScheme.primary.withOpacity(0.05),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(20)),
+        color: Theme.of(context).colorScheme.primary,
+        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(15)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          // Avatar y nombre
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).colorScheme.primary,
-                      Theme.of(context).colorScheme.primary.withOpacity(0.7),
-                    ],
-                  ),
+          // Avatar compacto
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).colorScheme.primary,
+                  Theme.of(context).colorScheme.primary.withOpacity(0.7),
+                ],
+              ),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(1.5),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: CircleAvatar(
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.primary.withOpacity(0.1),
+                radius: 18,
+                child: Icon(
+                  Icons.person,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${user.nombre} ${user.apellidoPaterno}',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    shape: BoxShape.circle,
                   ),
-                  child: CircleAvatar(
-                    backgroundColor: Theme.of(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
                       context,
                     ).colorScheme.primary.withOpacity(0.1),
-                    radius: 24,
-                    child: Icon(
-                      Icons.person,
-                      size: 28,
-                      color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    user.tipoUsuario?.toUpperCase() ?? 'USUARIO',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${user.nombre} ${user.apellidoPaterno}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        user.tipoUsuario?.toUpperCase() ?? 'USUARIO',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -165,7 +135,7 @@ class Sidebar extends StatelessWidget {
     Widget optionsWidget;
 
     switch (user.tipoUsuario) {
-      case 'director':
+      case 'admin':
         optionsWidget = AdminSidebarOptions(
           viewModel: viewModel,
           selectedIndex: selectedIndex,

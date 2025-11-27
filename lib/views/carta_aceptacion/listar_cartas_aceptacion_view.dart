@@ -153,11 +153,6 @@ class _ListarCartasAceptacionViewContentState
                     'No se encontraron cartas de aceptación',
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Token: ${_token.substring(0, 10)}...',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
                 ],
               ),
             );

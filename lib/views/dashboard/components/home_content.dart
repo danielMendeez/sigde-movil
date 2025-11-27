@@ -38,14 +38,7 @@ class HomeContent extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Theme.of(context).colorScheme.primary.withOpacity(0.1),
-            Theme.of(context).colorScheme.primary.withOpacity(0.05),
-          ],
-        ),
+        color: Theme.of(context).colorScheme.primary.withOpacity(0.08),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -119,36 +112,24 @@ class HomeContent extends StatelessWidget {
           icon: Icons.business_center_rounded,
           title: 'Estadías',
           description: 'Consulta tu información de estadías y seguimiento.',
-          color: Colors.blue.shade600,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.blue.shade50, Colors.blue.shade100],
-          ),
+          color: Colors.green.shade600,
+          backgroundColor: Colors.green.shade50,
         ),
         const SizedBox(height: 16),
         _HomeCard(
           icon: Icons.assignment_turned_in_rounded,
-          title: 'Carta de aceptación',
-          description: 'Revisa y gestiona tu carta de aceptación.',
+          title: 'Cartas de aceptación',
+          description: 'Revisa y gestiona tus cartas de aceptación.',
           color: Colors.green.shade600,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.green.shade50, Colors.green.shade100],
-          ),
+          backgroundColor: Colors.green.shade50,
         ),
         const SizedBox(height: 16),
         _HomeCard(
           icon: Icons.description_rounded,
-          title: 'Carta de presentación',
-          description: 'Visualiza y descarga tu carta de presentación.',
-          color: Colors.orange.shade600,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.orange.shade50, Colors.orange.shade100],
-          ),
+          title: 'Cartas de presentación',
+          description: 'Visualiza y descarga tus cartas de presentación.',
+          color: Colors.green.shade600,
+          backgroundColor: Colors.green.shade50,
         ),
       ],
     );
@@ -160,14 +141,14 @@ class _HomeCard extends StatelessWidget {
   final String title;
   final String description;
   final Color color;
-  final Gradient? gradient;
+  final Color backgroundColor;
 
   const _HomeCard({
     required this.icon,
     required this.title,
     required this.description,
     required this.color,
-    this.gradient,
+    required this.backgroundColor,
   });
 
   @override
@@ -183,8 +164,8 @@ class _HomeCard extends StatelessWidget {
         },
         borderRadius: BorderRadius.circular(20),
         child: Container(
-          width: double.infinity, // Ocupa todo el ancho disponible
-          decoration: BoxDecoration(gradient: gradient),
+          width: double.infinity,
+          color: backgroundColor,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Row(

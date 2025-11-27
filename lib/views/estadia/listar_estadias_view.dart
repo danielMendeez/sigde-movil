@@ -194,7 +194,7 @@ class _ListarEstadiasViewContentState
             ),
           );
         },
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
         tooltip: 'Registrar nueva estadía',
