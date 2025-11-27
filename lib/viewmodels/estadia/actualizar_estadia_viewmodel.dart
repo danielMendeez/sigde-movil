@@ -19,7 +19,10 @@ class ActualizarEstadiaViewModel with ChangeNotifier {
 
   ActualizarEstadiaViewModel(this._estadiaService);
 
-  Future<bool> actualizarEstadia(ActualizarEstadiaRequest request) async {
+  Future<bool> actualizarEstadia(
+    ActualizarEstadiaRequest request,
+    String token,
+  ) async {
     _isLoading = true;
     _success = false;
     _errorMessage = '';
@@ -27,7 +30,10 @@ class ActualizarEstadiaViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      _estadiaActualizada = await _estadiaService.actualizarEstadia(request);
+      _estadiaActualizada = await _estadiaService.actualizarEstadia(
+        request,
+        token,
+      );
       _success = true;
       return true;
     } catch (e) {

@@ -127,7 +127,7 @@ class _ActualizarEstadiaViewContentState
         estatus: _estatus,
       );
 
-      final success = await viewModel.actualizarEstadia(request);
+      final success = await viewModel.actualizarEstadia(request, _token);
 
       if (success && viewModel.success) {
         // Mostrar mensaje de éxito

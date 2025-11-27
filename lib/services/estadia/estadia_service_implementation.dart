@@ -94,11 +94,15 @@ class EstadiaServiceImplementation implements EstadiaService {
   }
 
   @override
-  Future<Estadia> actualizarEstadia(ActualizarEstadiaRequest request) async {
+  Future<Estadia> actualizarEstadia(
+    ActualizarEstadiaRequest request,
+    String token,
+  ) async {
     try {
       final response = await _apiClient.post(
-        '/estadia/update',
+        '/estadias/update',
         data: request.toJson(),
+        headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.containsKey('estadia')) {
