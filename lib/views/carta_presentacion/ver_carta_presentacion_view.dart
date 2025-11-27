@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
 import 'package:sigde/utils/provider_helpers.dart';
 import 'package:sigde/viewmodels/carta_presentacion/ver_carta_presentacion_viewmodel.dart';
+import 'package:sigde/viewmodels/carta_presentacion/firmar_carta_presentacion_viewmodel.dart';
 
 class VerCartaPresentacionView extends StatelessWidget {
   final String token;
@@ -16,7 +18,7 @@ class VerCartaPresentacionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppProviders.wrapWithVerEditarCartaPresentacionProviders(
+    return AppProviders.wrapWithVerFirmarEditarCartaPresentacionProviders(
       token: token,
       child: _VerCartaPresentacionViewContent(carta: cartaId),
     );
@@ -96,8 +98,7 @@ class _VerCartaPresentacionViewContentState
     }
   }
 
-  void _solicitarFirma() {
-    // Lógica para solicitar firma al director
+  void _firmarCarta() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -114,13 +115,7 @@ class _VerCartaPresentacionViewContentState
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // Lógica para enviar solicitud de firma
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Carta de presentación firmada exitosamente'),
-                  backgroundColor: Colors.green,
-                ),
-              );
+              _procesarFirmaCarta();
             },
             child: const Text('Firmar'),
             style: ElevatedButton.styleFrom(
@@ -130,6 +125,38 @@ class _VerCartaPresentacionViewContentState
           ),
         ],
       ),
+    );
+  }
+
+  void _procesarFirmaCarta() async {
+    final firmarViewModel = context.read<FirmarCartaPresentacionViewModel>();
+    await firmarViewModel.firmarCartaPresentacion(_token, widget.carta.id);
+
+    if (!firmarViewModel.hasError) {
+      _mensajeFirmaExitosa();
+    } else if (firmarViewModel.hasError) {
+      Fluttertoast.showToast(
+        msg: "Error al firmar la carta: ${firmarViewModel.errorMessage}",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      print(
+        'Error al firmar la carta de presentación: ${firmarViewModel.errorMessage}',
+      );
+    }
+  }
+
+  void _mensajeFirmaExitosa() {
+    Fluttertoast.showToast(
+      msg: "La carta de presentación ha sido firmada exitosamente.",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 
@@ -379,7 +406,7 @@ class _VerCartaPresentacionViewContentState
         if (widget.carta.firmadaDirector == 0) ...[
           Expanded(
             child: ElevatedButton.icon(
-              onPressed: _solicitarFirma,
+              onPressed: _firmarCarta,
               icon: const Icon(Icons.draw),
               label: const Text('Firmar'),
               style: ElevatedButton.styleFrom(
