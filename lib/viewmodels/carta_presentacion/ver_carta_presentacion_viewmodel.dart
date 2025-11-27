@@ -28,12 +28,10 @@ class VerCartaPresentacionViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      final request = VerCartaPresentacionRequest(
-        token: token,
-        id: cartaPresentacionId,
-      );
+      final request = VerCartaPresentacionRequest(id: cartaPresentacionId);
       _cartaPresentacion = await _cartaPresentacionService.verCartaPresentacion(
         request,
+        token,
       );
     } catch (e) {
       _errorMessage = e.toString();

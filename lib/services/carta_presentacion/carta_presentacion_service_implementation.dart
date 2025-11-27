@@ -48,22 +48,24 @@ class CartaPresentacionServiceImplementation
   @override
   Future<CartaPresentacion> verCartaPresentacion(
     VerCartaPresentacionRequest request,
+    String token,
   ) async {
     try {
       final response = await _apiClient.post(
-        '/cartaPres/verCartaPres',
+        '/carta-pres/verCarta',
         data: request.toJson(),
+        headers: {'Authorization': 'Bearer $token'},
       );
 
-      if (response.containsKey('cartaPres')) {
-        final cartaPresData = response['cartaPres'];
-        if (cartaPresData is Map<String, dynamic>) {
-          return CartaPresentacion.fromJson(cartaPresData);
+      if (response.containsKey('carta')) {
+        final cartaData = response['carta'];
+        if (cartaData is Map<String, dynamic>) {
+          return CartaPresentacion.fromJson(cartaData);
         } else {
-          throw CartaPresentacionException('Formato inválido para "cartaPres"');
+          throw CartaPresentacionException('Formato inválido para "carta"');
         }
       } else {
-        throw CartaPresentacionException('Respuesta no contiene "cartaPres"');
+        throw CartaPresentacionException('Respuesta no contiene "carta"');
       }
     } catch (e) {
       throw CartaPresentacionException(

@@ -5,5 +5,6 @@ abstract class CartaPresentacionService {
   Future<List<CartaPresentacion>> listarCartasPresentacion(String token);
   Future<CartaPresentacion> verCartaPresentacion(
     VerCartaPresentacionRequest request,
+    String token,
   );
 }
