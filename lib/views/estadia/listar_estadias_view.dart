@@ -45,6 +45,15 @@ class _ListarEstadiasViewContentState
     });
   }
 
+  void _registrarNuevaEstadia(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegistrarEstadiaView(token: _token),
+      ),
+    );
+  }
+
   void _editarEstadia(BuildContext context, Estadia estadia) {
     Navigator.push(
       context,
@@ -187,12 +196,7 @@ class _ListarEstadiasViewContentState
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RegistrarEstadiaView(token: _token),
-            ),
-          );
+          _registrarNuevaEstadia(context);
         },
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,

@@ -1,3 +1,4 @@
+import 'package:sigde/models/carta_presentacion/registrar_carta_presentacion_request.dart';
 import 'package:sigde/services/api_client.dart';
 import 'package:sigde/services/carta_presentacion/carta_presentacion_service.dart';
 import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
@@ -70,6 +71,32 @@ class CartaPresentacionServiceImplementation
     } catch (e) {
       throw CartaPresentacionException(
         'Error al obtener carta de presentación: ${e.toString()}',
+      );
+    }
+  }
+
+  @override
+  Future<CartaPresentacion> registrarCartaPresentacion(
+    RegistrarCartaPresentacionRequest request,
+    String token,
+  ) async {
+    try {
+      final response = await _apiClient.post(
+        '/carta-pres/crear',
+        data: request.toJson(),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.containsKey('carta')) {
+        return CartaPresentacion.fromJson(response['carta']);
+      } else {
+        throw CartaPresentacionException(
+          'Formato de respuesta inválido: no se encontró "carta"',
+        );
+      }
+    } catch (e) {
+      throw CartaPresentacionException(
+        'Error al registrar carta de presentación: ${e.toString()}',
       );
     }
   }

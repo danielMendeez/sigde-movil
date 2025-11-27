@@ -4,6 +4,7 @@ import 'package:sigde/utils/provider_helpers.dart';
 import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
 import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_viewmodel.dart';
 import 'package:sigde/views/carta_presentacion/ver_carta_presentacion_view.dart';
+import 'package:sigde/views/carta_presentacion/registrar_carta_presentacion_view.dart';
 
 class ListarCartasPresentacionView extends StatelessWidget {
   final String token;
@@ -45,6 +46,15 @@ class _ListarCartasPresentacionViewContentState
   void _recargarCartas() {
     context.read<ListarCartasPresentacionViewModel>().cargarCartasPresentacion(
       _token,
+    );
+  }
+
+  void _registrarNuevaCarta(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegistrarCartaPresentacionView(token: _token),
+      ),
     );
   }
 
@@ -137,11 +147,6 @@ class _ListarCartasPresentacionViewContentState
                     'No se encontraron cartas de presentación',
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Token: ${_token.substring(0, 10)}...', // Para debug
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
                 ],
               ),
             );
@@ -165,15 +170,7 @@ class _ListarCartasPresentacionViewContentState
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navegar a vista de registrar carta (implementar después)
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => RegistrarCartaPresentacionView(
-          //       token: _token,
-          //     ),
-          //   ),
-          // );
+          _registrarNuevaCarta(context);
         },
         backgroundColor: Colors.purple,
         foregroundColor: Colors.white,

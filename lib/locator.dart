@@ -19,6 +19,7 @@ import 'package:sigde/services/carta_presentacion/carta_presentacion_service_imp
 // ViewModels - Carta de Presentación
 import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_presentacion/ver_carta_presentacion_viewmodel.dart';
+import 'package:sigde/viewmodels/carta_presentacion/registrar_carta_presentacion_viewmodel.dart';
 
 // Servicios - Carta de Aceptación
 import 'package:sigde/services/carta_aceptacion/carta_aceptacion_service.dart';
@@ -76,6 +77,10 @@ void _setupCartaPresentacionViewModels() {
   );
   getIt.registerFactory<VerCartaPresentacionViewModel>(
     () => VerCartaPresentacionViewModel(getIt<CartaPresentacionService>()),
+  );
+  getIt.registerFactory<RegistrarCartaPresentacionViewModel>(
+    () =>
+        RegistrarCartaPresentacionViewModel(getIt<CartaPresentacionService>()),
   );
 }
 

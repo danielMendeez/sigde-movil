@@ -18,6 +18,7 @@ import 'package:sigde/viewmodels/estadia/eliminar_estadia_viewmodel.dart';
 // ViewModels de Carta de Presentación
 import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_presentacion/ver_carta_presentacion_viewmodel.dart';
+import 'package:sigde/viewmodels/carta_presentacion/registrar_carta_presentacion_viewmodel.dart';
 
 // ViewModels de Carta de Aceptación
 import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewmodel.dart';
@@ -64,6 +65,9 @@ class AppProviders {
     ),
     ChangeNotifierProvider<VerCartaPresentacionViewModel>(
       create: (_) => getIt<VerCartaPresentacionViewModel>(),
+    ),
+    ChangeNotifierProvider<RegistrarCartaPresentacionViewModel>(
+      create: (_) => getIt<RegistrarCartaPresentacionViewModel>(),
     ),
   ];
 
@@ -121,6 +125,13 @@ class AppProviders {
   get verEditarCartaPresentacionProviders => [
     ChangeNotifierProvider<VerCartaPresentacionViewModel>(
       create: (_) => getIt<VerCartaPresentacionViewModel>(),
+    ),
+  ];
+
+  static List<ChangeNotifierProvider<ChangeNotifier>>
+  get registrarCartaPresentacionProviders => [
+    ChangeNotifierProvider<RegistrarCartaPresentacionViewModel>(
+      create: (_) => getIt<RegistrarCartaPresentacionViewModel>(),
     ),
   ];
 
@@ -182,6 +193,16 @@ class AppProviders {
   }) {
     return MultiProvider(
       providers: verEditarCartaPresentacionProviders,
+      child: TokenWrapper(token: token, child: child),
+    );
+  }
+
+  static Widget wrapWithRegistrarCartaPresentacionProviders({
+    required String token,
+    required Widget child,
+  }) {
+    return MultiProvider(
+      providers: registrarCartaPresentacionProviders,
       child: TokenWrapper(token: token, child: child),
     );
   }
