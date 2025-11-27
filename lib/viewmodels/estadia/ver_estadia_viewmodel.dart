@@ -25,8 +25,8 @@ class VerEstadiaViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      final request = VerEstadiaRequest(token: token, id: estadiaId);
-      _estadia = await _estadiaService.verEstadia(request);
+      final request = VerEstadiaRequest(id: estadiaId);
+      _estadia = await _estadiaService.verEstadia(request, token);
     } catch (e) {
       _errorMessage = e.toString();
       _estadia = null;

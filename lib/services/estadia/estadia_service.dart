@@ -10,7 +10,7 @@ abstract class EstadiaService {
     RegistrarEstadiaRequest request,
     String token,
   );
-  Future<Estadia> verEstadia(VerEstadiaRequest request);
+  Future<Estadia> verEstadia(VerEstadiaRequest request, String token);
   Future<Estadia> actualizarEstadia(ActualizarEstadiaRequest request);
   Future<void> eliminarEstadia(EliminarEstadiaRequest request);
 }

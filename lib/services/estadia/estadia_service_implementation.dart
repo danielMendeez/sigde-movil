@@ -70,11 +70,12 @@ class EstadiaServiceImplementation implements EstadiaService {
   }
 
   @override
-  Future<Estadia> verEstadia(VerEstadiaRequest request) async {
+  Future<Estadia> verEstadia(VerEstadiaRequest request, String token) async {
     try {
       final response = await _apiClient.post(
-        '/estadia/verEstadia',
+        '/estadias/verEstadia',
         data: request.toJson(),
+        headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.containsKey('estadia')) {
