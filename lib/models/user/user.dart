@@ -3,6 +3,7 @@ class User {
   final String? nombre;
   final String? apellidoPaterno;
   final String? apellidoMaterno;
+  final String? matricula;
   final String? curp;
   final String? correo;
   final String? telefono;
@@ -14,6 +15,7 @@ class User {
     this.nombre,
     this.apellidoPaterno,
     this.apellidoMaterno,
+    this.matricula,
     this.curp,
     this.correo,
     this.telefono,
@@ -29,6 +31,7 @@ class User {
       nombre: userData['nombre'] ?? '',
       apellidoPaterno: userData['apellido_paterno'] ?? '',
       apellidoMaterno: userData['apellido_materno'] ?? '',
+      matricula: userData['matricula'] ?? '',
       curp: userData['curp'] ?? '',
       correo: userData['correo'] ?? '',
       telefono: userData['telefono'] ?? '',
@@ -42,6 +45,7 @@ class User {
     'nombre': nombre,
     'apellido_paterno': apellidoPaterno,
     'apellido_materno': apellidoMaterno,
+    'matricula': matricula,
     'curp': curp,
     'correo': correo,
     'telefono': telefono,

@@ -6,7 +6,8 @@ class ListarUsersViewModel with ChangeNotifier {
   final UserService _userService;
 
   List<User> _users = [];
-  User? usuarioSeleccionado;
+  User? alumnoSeleccionado;
+  User? tutorSeleccionado;
   bool _isLoading = false;
   String _errorMessage = '';
 
@@ -17,7 +18,7 @@ class ListarUsersViewModel with ChangeNotifier {
 
   ListarUsersViewModel(this._userService);
 
-  Future<void> listarUsers() async {
+  Future<void> cargarUsers() async {
     _isLoading = true;
     _errorMessage = '';
     notifyListeners();
@@ -60,10 +61,15 @@ class ListarUsersViewModel with ChangeNotifier {
     }
   }
 
-  void seleccionarUsuario(User? user) {
-    usuarioSeleccionado = user;
+  void seleccionarAlumno(User? user) {
+    alumnoSeleccionado = user;
     notifyListeners();
   }
 
-  int? get selectedUserId => usuarioSeleccionado?.id;
+  void seleccionarTutor(User? user) {
+    tutorSeleccionado = user;
+    notifyListeners();
+  }
+
+  int? get selectedUserId => alumnoSeleccionado?.id;
 }

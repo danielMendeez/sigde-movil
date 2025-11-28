@@ -37,6 +37,11 @@ import 'package:sigde/services/user/user_service.dart';
 import 'package:sigde/services/user/user_service_implementation.dart';
 import 'package:sigde/viewmodels/user/listar_users_viewmodel.dart';
 
+// Servicios - Empresa
+import 'package:sigde/services/empresa/empresa_service.dart';
+import 'package:sigde/services/empresa/empresa_service_implementation.dart';
+import 'package:sigde/viewmodels/empresa/listar_empresas_viewmodel.dart';
+
 final GetIt getIt = GetIt.instance;
 
 void setupDependencies() {
@@ -63,6 +68,9 @@ void _setupServices() {
   );
   getIt.registerSingleton<UserService>(
     UserServiceImplementation(getIt<ApiClient>()),
+  );
+  getIt.registerSingleton<EmpresaService>(
+    EmpresaServiceImplementation(getIt<ApiClient>()),
   );
 }
 
@@ -119,5 +127,8 @@ void _setupCartasAceptacionViewModels() {
 void _setupOtherViewModels() {
   getIt.registerFactory<ListarUsersViewModel>(
     () => ListarUsersViewModel(getIt<UserService>()),
+  );
+  getIt.registerFactory<ListarEmpresasViewModel>(
+    () => ListarEmpresasViewModel(getIt<EmpresaService>()),
   );
 }

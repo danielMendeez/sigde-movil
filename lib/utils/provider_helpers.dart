@@ -29,6 +29,7 @@ import 'package:sigde/viewmodels/carta_aceptacion/registrar_carta_aceptacion_vie
 
 // ViewModels comunes
 import 'package:sigde/viewmodels/user/listar_users_viewmodel.dart';
+import 'package:sigde/viewmodels/empresa/listar_empresas_viewmodel.dart';
 
 class AppProviders {
   // PROVIDERS GLOBALES
@@ -103,6 +104,9 @@ class AppProviders {
     ChangeNotifierProvider<ListarUsersViewModel>(
       create: (_) => getIt<ListarUsersViewModel>(),
     ),
+    ChangeNotifierProvider<ListarEmpresasViewModel>(
+      create: (_) => getIt<ListarEmpresasViewModel>(),
+    ),
   ];
 
   // PROVIDERS ESPECIFICOS POR PANTALLA
@@ -126,6 +130,9 @@ class AppProviders {
     ),
     ChangeNotifierProvider<ListarUsersViewModel>(
       create: (_) => getIt<ListarUsersViewModel>(),
+    ),
+    ChangeNotifierProvider<ListarEmpresasViewModel>(
+      create: (_) => getIt<ListarEmpresasViewModel>(),
     ),
   ];
 

@@ -5,6 +5,8 @@ import 'package:sigde/models/estadia/registrar_estadia_request.dart';
 import 'package:sigde/viewmodels/estadia/registrar_estadia_viewmodel.dart';
 import 'package:sigde/viewmodels/user/listar_users_viewmodel.dart';
 import 'package:sigde/models/user/user.dart';
+import 'package:sigde/viewmodels/empresa/listar_empresas_viewmodel.dart';
+import 'package:sigde/models/empresa/empresa.dart';
 
 class RegistrarEstadiaView extends StatelessWidget {
   final String token;
@@ -46,7 +48,8 @@ class _RegistrarEstadiaViewContentState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ListarUsersViewModel>().listarUsers();
+      context.read<ListarUsersViewModel>().cargarUsers();
+      context.read<ListarEmpresasViewModel>().cargarEmpresas(_token);
     });
   }
 
@@ -178,7 +181,7 @@ class _RegistrarEstadiaViewContentState
                     const SizedBox(height: 16),
                   ],
 
-                  // Campo: ID Alumno
+                  // Campo: Alumno
                   Consumer<ListarUsersViewModel>(
                     builder: (context, vm, child) {
                       if (vm.isLoading) {
@@ -194,17 +197,15 @@ class _RegistrarEstadiaViewContentState
                           labelText: "Alumno",
                           border: OutlineInputBorder(),
                         ),
-                        value: vm.usuarioSeleccionado,
+                        value: vm.alumnoSeleccionado,
                         items: vm.users.map((user) {
                           return DropdownMenuItem(
                             value: user,
-                            child: Text(
-                              "${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}",
-                            ),
+                            child: Text("${user.nombre} - ${user.matricula}"),
                           );
                         }).toList(),
                         onChanged: (value) {
-                          vm.seleccionarUsuario(value);
+                          vm.seleccionarAlumno(value);
                           // Guardar el ID en tu controlador actual
                           _alumnoIdController.text = value?.id.toString() ?? "";
                         },
@@ -215,28 +216,47 @@ class _RegistrarEstadiaViewContentState
                       );
                     },
                   ),
-
                   const SizedBox(height: 16),
 
-                  // Campo: ID Docente
-                  _buildTextField(
-                    controller: _empresaIdController,
-                    label: 'ID Empresa',
-                    hintText: 'Ingrese el ID de la empresa',
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese el ID de la empresa';
+                  // Campo: Empresa
+                  Consumer<ListarEmpresasViewModel>(
+                    builder: (context, vm, child) {
+                      if (vm.isLoading) {
+                        return const CircularProgressIndicator();
                       }
-                      if (int.tryParse(value) == null) {
-                        return 'Ingrese un número válido';
+
+                      if (vm.hasError) {
+                        return Text("Error: ${vm.errorMessage}");
                       }
-                      return null;
+
+                      return DropdownButtonFormField<Empresa>(
+                        decoration: const InputDecoration(
+                          labelText: "Empresa",
+                          border: OutlineInputBorder(),
+                        ),
+                        value: vm.empresaSeleccionado,
+                        items: vm.empresas.map((empresa) {
+                          return DropdownMenuItem(
+                            value: empresa,
+                            child: Text("${empresa.nombre} - ${empresa.rfc}"),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          vm.seleccionarEmpresa(value);
+                          // Guardar el ID en tu controlador actual
+                          _empresaIdController.text =
+                              value?.id.toString() ?? "";
+                        },
+                        validator: (value) {
+                          if (value == null) return "Seleccione una empresa";
+                          return null;
+                        },
+                      );
                     },
                   ),
                   const SizedBox(height: 16),
 
-                  // Campo: ID Empresa
+                  // Campo: Carrera
                   _buildTextField(
                     controller: _carreraIdController,
                     label: 'ID Carrera',
@@ -254,16 +274,41 @@ class _RegistrarEstadiaViewContentState
                   ),
                   const SizedBox(height: 16),
 
-                  // Campo: Asesor Externo
-                  _buildTextField(
-                    controller: _tutorIdController,
-                    label: 'ID Tutor',
-                    hintText: 'Ingrese el ID del tutor',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese el ID del tutor';
+                  // Campo: Tutor
+                  Consumer<ListarUsersViewModel>(
+                    builder: (context, vm, child) {
+                      if (vm.isLoading) {
+                        return const CircularProgressIndicator();
                       }
-                      return null;
+
+                      if (vm.hasError) {
+                        return Text("Error: ${vm.errorMessage}");
+                      }
+
+                      return DropdownButtonFormField<User>(
+                        decoration: const InputDecoration(
+                          labelText: "Tutor",
+                          border: OutlineInputBorder(),
+                        ),
+                        value: vm.tutorSeleccionado,
+                        items: vm.users.map((user) {
+                          return DropdownMenuItem(
+                            value: user,
+                            child: Text(
+                              "${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}",
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          vm.seleccionarTutor(value);
+                          // Guardar el ID en tu controlador actual
+                          _tutorIdController.text = value?.id.toString() ?? "";
+                        },
+                        validator: (value) {
+                          if (value == null) return "Seleccione un tutor";
+                          return null;
+                        },
+                      );
                     },
                   ),
                   const SizedBox(height: 16),
