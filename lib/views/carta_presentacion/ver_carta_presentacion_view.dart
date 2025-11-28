@@ -249,11 +249,14 @@ class _VerCartaPresentacionViewContentState
               ),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow('ID de la Carta', widget.carta.id.toString()),
-            _buildInfoRow('ID de Estadía', widget.carta.estadiaId.toString()),
+            _buildInfoRow('Carta', widget.carta.id.toString()),
             _buildInfoRow(
-              'ID del Director',
-              widget.carta.directorId.toString(),
+              'Estadía',
+              widget.carta.estadia?.proyectoNombre ?? 'Sin estadía',
+            ),
+            _buildInfoRow(
+              'Empresa',
+              widget.carta.estadia?.empresa?.nombre ?? 'Sin empresa',
             ),
             _buildInfoRow(
               'Fecha de Emisión',

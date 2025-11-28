@@ -239,11 +239,12 @@ class _CartaPresentacionCard extends StatelessWidget {
               // Información de la carta
               _InfoRow(
                 icon: Icons.person,
-                text: 'Director ID: ${carta.directorId}',
+                text: 'Director: ${carta.estadia?.alumno?.nombre}',
               ),
               _InfoRow(
                 icon: Icons.school,
-                text: 'Firma de director: ${carta.firmadaDirector}',
+                text:
+                    'Firma de director: ${carta.firmadaDirector == 1 ? 'Sí' : 'No'}',
               ),
               _InfoRow(
                 icon: Icons.date_range,

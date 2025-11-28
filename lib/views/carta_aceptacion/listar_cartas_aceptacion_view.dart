@@ -259,7 +259,8 @@ class _CartaAceptacionCard extends StatelessWidget {
               // Información principal de la carta
               _InfoRow(
                 icon: Icons.business_center,
-                text: 'Estadía ID: ${carta.estadiaId}',
+                text:
+                    'Estadía: ${carta.estadia?.proyectoNombre ?? 'Sin estadía'}',
               ),
 
               _InfoRow(
@@ -268,7 +269,7 @@ class _CartaAceptacionCard extends StatelessWidget {
               ),
 
               // Observaciones (si existen)
-              if (carta.observaciones.isNotEmpty) ...[
+              if ((carta.observaciones ?? '').isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,7 +284,7 @@ class _CartaAceptacionCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      carta.observaciones,
+                      carta.observaciones ?? '',
                       style: const TextStyle(
                         fontSize: 14,
                         fontStyle: FontStyle.italic,

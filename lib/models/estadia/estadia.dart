@@ -1,3 +1,7 @@
+import 'package:sigde/models/user/user.dart';
+import 'package:sigde/models/carrera/carrera.dart';
+import 'package:sigde/models/empresa/empresa.dart';
+
 class Estadia {
   final int id;
   final int alumnoId;
@@ -11,6 +15,9 @@ class Estadia {
   final String estatus;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final User? alumno;
+  final Empresa? empresa;
+  final Carrera? carrera;
 
   Estadia({
     required this.id,
@@ -25,6 +32,9 @@ class Estadia {
     required this.estatus,
     required this.createdAt,
     required this.updatedAt,
+    this.alumno,
+    this.empresa,
+    this.carrera,
   });
 
   factory Estadia.fromJson(Map<String, dynamic> json) {
@@ -41,6 +51,13 @@ class Estadia {
       estatus: json['estatus'] ?? '',
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
+      alumno: json['alumno'] != null ? User.fromJson(json['alumno']) : null,
+      empresa: json['empresa'] != null
+          ? Empresa.fromJson(json['empresa'])
+          : null,
+      carrera: json['carrera'] != null
+          ? Carrera.fromJson(json['carrera'])
+          : null,
     );
   }
 

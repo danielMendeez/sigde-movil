@@ -1,3 +1,5 @@
+import 'package:sigde/models/estadia/estadia.dart';
+
 class CartaPresentacion {
   final int id;
   final int estadiaId;
@@ -8,6 +10,9 @@ class CartaPresentacion {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  // NUEVO: objeto estadia completo
+  final Estadia? estadia;
+
   CartaPresentacion({
     required this.id,
     required this.estadiaId,
@@ -17,6 +22,7 @@ class CartaPresentacion {
     required this.firmadaDirector,
     required this.createdAt,
     required this.updatedAt,
+    this.estadia,
   });
 
   factory CartaPresentacion.fromJson(Map<String, dynamic> json) {
@@ -27,7 +33,7 @@ class CartaPresentacion {
       fechaEmision: DateTime.parse(
         json['fecha_emision'] ?? DateTime.now().toIso8601String(),
       ),
-      rutaDocumento: json['ruta_documento'] ?? '',
+      rutaDocumento: json['ruta_documento']?.toString() ?? '',
       firmadaDirector: json['firmada_director'] ?? 0,
       createdAt: DateTime.parse(
         json['created_at'] ?? DateTime.now().toIso8601String(),
@@ -35,6 +41,11 @@ class CartaPresentacion {
       updatedAt: DateTime.parse(
         json['updated_at'] ?? DateTime.now().toIso8601String(),
       ),
+
+      // Leer la estadia anidada si viene
+      estadia: json['estadia'] != null
+          ? Estadia.fromJson(json['estadia'])
+          : null,
     );
   }
 

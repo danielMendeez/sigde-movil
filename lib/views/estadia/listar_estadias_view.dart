@@ -253,7 +253,7 @@ class _EstadiaCard extends StatelessWidget {
                   ),
                   _InfoRow(
                     icon: Icons.help_outline,
-                    text: 'Apoyo: ${estadia.apoyo}',
+                    text: 'Apoyo: ${estadia.apoyo == 1 ? 'Sí' : 'No'}',
                   ),
                   const SizedBox(height: 8),
                   Container(

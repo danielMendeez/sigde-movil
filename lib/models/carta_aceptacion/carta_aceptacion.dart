@@ -1,16 +1,20 @@
+import 'package:sigde/models/estadia/estadia.dart';
+
 class CartaAceptacion {
   final int id;
   final int estadiaId;
   final DateTime fechaRecepcion;
   final String rutaDocumento;
-  final String observaciones;
+  final String? observaciones;
+  final Estadia? estadia;
 
   CartaAceptacion({
     required this.id,
     required this.estadiaId,
     required this.fechaRecepcion,
     required this.rutaDocumento,
-    required this.observaciones,
+    this.observaciones,
+    this.estadia,
   });
 
   factory CartaAceptacion.fromJson(Map<String, dynamic> json) {
@@ -21,7 +25,10 @@ class CartaAceptacion {
         json['fecha_recepcion'] ?? DateTime.now().toIso8601String(),
       ),
       rutaDocumento: json['ruta_documento'] ?? '',
-      observaciones: json['observaciones'] ?? '',
+      observaciones: json['observaciones']?.toString() ?? '',
+      estadia: json['estadia'] != null
+          ? Estadia.fromJson(json['estadia'])
+          : null,
     );
   }
 

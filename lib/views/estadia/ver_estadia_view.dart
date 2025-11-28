@@ -186,13 +186,14 @@ class _EstadiaDetalleWidget extends StatelessWidget {
             children: [
               _InfoItem(
                 icon: Icons.person,
-                label: 'ID Alumno:',
-                valor: estadia.alumnoId.toString(),
+                label: 'Alumno:',
+                valor:
+                    "${estadia.alumno?.nombre} ${estadia.alumno?.apellidoPaterno}",
               ),
               _InfoItem(
                 icon: Icons.business,
-                label: 'ID Empresa:',
-                valor: estadia.empresaId.toString(),
+                label: 'Empresa:',
+                valor: estadia.empresa?.nombre ?? 'Sin empresa',
               ),
               _InfoItem(
                 icon: Icons.supervisor_account,
