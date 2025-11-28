@@ -4,6 +4,7 @@ import 'package:sigde/models/carta_aceptacion/carta_aceptacion.dart';
 import 'package:sigde/utils/provider_helpers.dart';
 import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewmodel.dart';
 import 'ver_carta_aceptacion_view.dart';
+import 'registrar_carta_aceptacion_view.dart';
 
 class ListarCartasAceptacionView extends StatelessWidget {
   final String token;
@@ -70,6 +71,16 @@ class _ListarCartasAceptacionViewContentState
     //     ),
     //   ),
     // );
+  }
+
+  void _registrarNuevaCarta() {
+    // Navegar a vista de registro
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegistrarCartaAceptacionView(token: _token),
+      ),
+    );
   }
 
   void _descargarPDF(CartaAceptacion carta) {
@@ -172,6 +183,14 @@ class _ListarCartasAceptacionViewContentState
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _registrarNuevaCarta();
+        },
+        backgroundColor: Colors.teal,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
       ),
     );
   }

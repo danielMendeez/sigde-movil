@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:sigde/models/carta_aceptacion/carta_aceptacion.dart';
 import 'package:sigde/utils/provider_helpers.dart';
 import 'package:sigde/viewmodels/carta_aceptacion/ver_carta_aceptacion_viewmodel.dart';
-import 'package:file_saver/file_saver.dart';
 
 class VerCartaAceptacionView extends StatelessWidget {
   final String token;
@@ -77,43 +75,6 @@ class _VerCartaAceptacionViewContentState
     viewModel.cargarCartaAceptacion(_token, widget.carta.id);
   }
 
-  void _descargarPDF() async {
-    // try {
-    //   final viewModel = Provider.of<DescargarCartaAceptacionViewModel>(
-    //     context,
-    //     listen: false,
-    //   );
-
-    //   final bytes = await viewModel.descargarCartaAceptacion(
-    //     widget.carta.id,
-    //     _token,
-    //   );
-
-    //   if (bytes.isEmpty) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       const SnackBar(content: Text('Error al descargar el PDF')),
-    //     );
-    //     return;
-    //   }
-
-    //   // Guardar archivo usando FileSaver
-    //   final path = await FileSaver.instance.saveFile(
-    //     name: "carta_${widget.carta.id}",
-    //     bytes: bytes,
-    //     fileExtension: "pdf",
-    //     mimeType: MimeType.pdf,
-    //   );
-
-    //   ScaffoldMessenger.of(
-    //     context,
-    //   ).showSnackBar(SnackBar(content: Text("PDF guardado en: $path")));
-    // } catch (e) {
-    //   ScaffoldMessenger.of(
-    //     context,
-    //   ).showSnackBar(SnackBar(content: Text("Error: $e")));
-    // }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<VerCartaAceptacionViewModel>(
@@ -128,11 +89,6 @@ class _VerCartaAceptacionViewContentState
                 icon: const Icon(Icons.edit),
                 onPressed: _editarCarta,
                 tooltip: 'Editar carta',
-              ),
-              IconButton(
-                icon: const Icon(Icons.download),
-                onPressed: _descargarPDF,
-                tooltip: 'Descargar PDF',
               ),
               IconButton(
                 icon: Icon(Icons.refresh),
@@ -237,20 +193,6 @@ class _VerCartaAceptacionViewContentState
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: _descargarPDF,
-                  icon: const Icon(Icons.visibility),
-                  label: const Text('Ver Documento'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                ),
-              ),
             ] else ...[
               const Row(
                 children: [
@@ -314,49 +256,5 @@ class _VerCartaAceptacionViewContentState
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
-  }
-
-  Color _getColorEstadoFirma(int estado) {
-    switch (estado) {
-      case 1:
-        return Colors.green;
-      case 0:
-        return Colors.orange;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  IconData _getIconEstadoFirma(int estado) {
-    switch (estado) {
-      case 1:
-        return Icons.check_circle;
-      case 0:
-        return Icons.pending_actions;
-      default:
-        return Icons.help_outline;
-    }
-  }
-
-  String _getTextoEstadoFirma(int estado) {
-    switch (estado) {
-      case 1:
-        return 'FIRMADA';
-      case 0:
-        return 'PENDIENTE DE FIRMA';
-      default:
-        return 'ESTADO DESCONOCIDO';
-    }
-  }
-
-  String _getDescripcionEstadoFirma(int estado) {
-    switch (estado) {
-      case 1:
-        return 'El director ha firmado esta carta de presentación';
-      case 0:
-        return 'Esperando la firma del director';
-      default:
-        return 'Estado no reconocido';
-    }
   }
 }

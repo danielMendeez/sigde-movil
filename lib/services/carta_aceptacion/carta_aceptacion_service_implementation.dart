@@ -2,6 +2,8 @@ import 'package:sigde/models/carta_aceptacion/carta_aceptacion.dart';
 import 'package:sigde/services/api_client.dart';
 import 'carta_aceptacion_service.dart';
 import 'package:sigde/models/carta_aceptacion/ver_carta_aceptacion_request.dart';
+import 'package:sigde/models/carta_aceptacion/registrar_carta_aceptacion_request.dart';
+import 'dart:io';
 
 class CartaAceptacionException implements Exception {
   final String message;
@@ -63,10 +65,54 @@ class CartaAceptacionServiceImplementation implements CartaAceptacionService {
       } else {
         throw CartaAceptacionException('Respuesta no contiene "carta"');
       }
+    } on ApiException {
+      rethrow;
     } catch (e) {
       throw CartaAceptacionException(
         'Error al obtener carta de aceptación: ${e.toString()}',
       );
+    }
+  }
+
+  @override
+  Future<CartaAceptacion> registrarCartaAceptacion(
+    RegistrarCartaAceptacionRequest request,
+    String token,
+    File? archivo,
+  ) async {
+    try {
+      // Preparar datos para el multipart
+      final cartaData = {
+        'estadia_id': request.estadiaId,
+        'fecha_recepcion': request.fechaRecepcion.toIso8601String(),
+        'observaciones': request.observaciones,
+      };
+
+      final headers = {'Authorization': 'Bearer $token'};
+
+      // Usar el método específico para carta de aceptación
+      final response = await _apiClient.postCartaAceptacion(
+        '/cartaAcep/registrar',
+        cartaData: cartaData,
+        archivo: archivo,
+        headers: headers,
+        onSendProgress: (sent, total) {
+          print('Progreso de subida: $sent/$total');
+        },
+      );
+
+      if (response is Map<String, dynamic>) {
+        return CartaAceptacion.fromJson(response);
+      } else {
+        throw ApiException(
+          message: 'Formato de respuesta inválido',
+          statusCode: 0,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(message: 'Error inesperado: $e', statusCode: 0);
     }
   }
 }

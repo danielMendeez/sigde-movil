@@ -25,6 +25,7 @@ import 'package:sigde/viewmodels/carta_presentacion/descargar_carta_presentacion
 // ViewModels de Carta de Aceptación
 import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_aceptacion/ver_carta_aceptacion_viewmodel.dart';
+import 'package:sigde/viewmodels/carta_aceptacion/registrar_carta_aceptacion_viewmodel.dart';
 
 class AppProviders {
   // PROVIDERS GLOBALES
@@ -88,6 +89,9 @@ class AppProviders {
     ),
     ChangeNotifierProvider<VerCartaAceptacionViewModel>(
       create: (_) => getIt<VerCartaAceptacionViewModel>(),
+    ),
+    ChangeNotifierProvider<RegistrarCartaAceptacionViewModel>(
+      create: (_) => getIt<RegistrarCartaAceptacionViewModel>(),
     ),
   ];
 
@@ -167,6 +171,14 @@ class AppProviders {
   get verCartaAceptacionProviders => [
     ChangeNotifierProvider<VerCartaAceptacionViewModel>(
       create: (_) => getIt<VerCartaAceptacionViewModel>(),
+    ),
+  ];
+
+  // Pantalla: Registrar Carta de Aceptación
+  static List<ChangeNotifierProvider<ChangeNotifier>>
+  get registrarCartaAceptacionProviders => [
+    ChangeNotifierProvider<RegistrarCartaAceptacionViewModel>(
+      create: (_) => getIt<RegistrarCartaAceptacionViewModel>(),
     ),
   ];
 
@@ -250,6 +262,16 @@ class AppProviders {
   }) {
     return MultiProvider(
       providers: verCartaAceptacionProviders,
+      child: TokenWrapper(token: token, child: child),
+    );
+  }
+
+  static Widget wrapWithRegistrarCartaAceptacionProviders({
+    required String token,
+    required Widget child,
+  }) {
+    return MultiProvider(
+      providers: registrarCartaAceptacionProviders,
       child: TokenWrapper(token: token, child: child),
     );
   }
