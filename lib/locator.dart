@@ -42,6 +42,11 @@ import 'package:sigde/services/empresa/empresa_service.dart';
 import 'package:sigde/services/empresa/empresa_service_implementation.dart';
 import 'package:sigde/viewmodels/empresa/listar_empresas_viewmodel.dart';
 
+// Servicios - Carrera
+import 'package:sigde/services/carrera/carrera_service.dart';
+import 'package:sigde/services/carrera/carrera_service_implementation.dart';
+import 'package:sigde/viewmodels/carrera/listar_carreras_viewmodel.dart';
+
 final GetIt getIt = GetIt.instance;
 
 void setupDependencies() {
@@ -71,6 +76,9 @@ void _setupServices() {
   );
   getIt.registerSingleton<EmpresaService>(
     EmpresaServiceImplementation(getIt<ApiClient>()),
+  );
+  getIt.registerSingleton<CarreraService>(
+    CarreraServiceImplementation(getIt<ApiClient>()),
   );
 }
 
@@ -130,5 +138,8 @@ void _setupOtherViewModels() {
   );
   getIt.registerFactory<ListarEmpresasViewModel>(
     () => ListarEmpresasViewModel(getIt<EmpresaService>()),
+  );
+  getIt.registerFactory<ListarCarrerasViewModel>(
+    () => ListarCarrerasViewModel(getIt<CarreraService>()),
   );
 }

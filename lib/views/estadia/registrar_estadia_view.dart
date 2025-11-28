@@ -3,10 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:sigde/utils/provider_helpers.dart';
 import 'package:sigde/models/estadia/registrar_estadia_request.dart';
 import 'package:sigde/viewmodels/estadia/registrar_estadia_viewmodel.dart';
-import 'package:sigde/viewmodels/user/listar_users_viewmodel.dart';
 import 'package:sigde/models/user/user.dart';
+import 'package:sigde/viewmodels/user/listar_users_viewmodel.dart';
 import 'package:sigde/viewmodels/empresa/listar_empresas_viewmodel.dart';
 import 'package:sigde/models/empresa/empresa.dart';
+import 'package:sigde/viewmodels/carrera/listar_carreras_viewmodel.dart';
+import 'package:sigde/models/carrera/carrera.dart';
 
 class RegistrarEstadiaView extends StatelessWidget {
   final String token;
@@ -50,6 +52,7 @@ class _RegistrarEstadiaViewContentState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ListarUsersViewModel>().cargarUsers();
       context.read<ListarEmpresasViewModel>().cargarEmpresas(_token);
+      context.read<ListarCarrerasViewModel>().cargarCarreras(_token);
     });
   }
 
@@ -201,7 +204,7 @@ class _RegistrarEstadiaViewContentState
                         items: vm.users.map((user) {
                           return DropdownMenuItem(
                             value: user,
-                            child: Text("${user.nombre} - ${user.matricula}"),
+                            child: Text("${user.matricula}"),
                           );
                         }).toList(),
                         onChanged: (value) {
@@ -257,21 +260,41 @@ class _RegistrarEstadiaViewContentState
                   const SizedBox(height: 16),
 
                   // Campo: Carrera
-                  _buildTextField(
-                    controller: _carreraIdController,
-                    label: 'ID Carrera',
-                    hintText: 'Ingrese el ID de la carrera',
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese el ID de la carrera';
+                  Consumer<ListarCarrerasViewModel>(
+                    builder: (context, vm, child) {
+                      if (vm.isLoading) {
+                        return const CircularProgressIndicator();
                       }
-                      if (int.tryParse(value) == null) {
-                        return 'Ingrese un número válido';
+
+                      if (vm.hasError) {
+                        return Text("Error: ${vm.errorMessage}");
                       }
-                      return null;
+
+                      return DropdownButtonFormField<Carrera>(
+                        decoration: const InputDecoration(
+                          labelText: "Carrera",
+                          border: OutlineInputBorder(),
+                        ),
+                        value: vm.carreraSeleccionada,
+                        items: vm.carreras.map((carrera) {
+                          return DropdownMenuItem(
+                            value: carrera,
+                            child: Text("${carrera.nombre}"),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          vm.seleccionarCarrera(value);
+                          _carreraIdController.text =
+                              value?.id.toString() ?? "";
+                        },
+                        validator: (value) {
+                          if (value == null) return "Seleccione una carrera";
+                          return null;
+                        },
+                      );
                     },
                   ),
+
                   const SizedBox(height: 16),
 
                   // Campo: Tutor
