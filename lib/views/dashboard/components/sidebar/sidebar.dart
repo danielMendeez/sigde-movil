@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:sigde/viewmodels/dashboard_viewmodel.dart';
-import 'package:sigde/models/user.dart';
+import 'package:sigde/models/user/user.dart';
 import 'package:sigde/viewmodels/auth/auth_viewmodel.dart';
 import 'admin_sidebar_options.dart';
 import 'student_sidebar_options.dart';

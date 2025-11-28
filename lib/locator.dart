@@ -32,6 +32,11 @@ import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewm
 import 'package:sigde/viewmodels/carta_aceptacion/ver_carta_aceptacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_aceptacion/registrar_carta_aceptacion_viewmodel.dart';
 
+// Servicios - Usuario
+import 'package:sigde/services/user/user_service.dart';
+import 'package:sigde/services/user/user_service_implementation.dart';
+import 'package:sigde/viewmodels/user/listar_users_viewmodel.dart';
+
 final GetIt getIt = GetIt.instance;
 
 void setupDependencies() {
@@ -39,6 +44,7 @@ void setupDependencies() {
   _setupEstadiaViewModels();
   _setupCartaPresentacionViewModels();
   _setupCartasAceptacionViewModels();
+  _setupOtherViewModels();
 }
 
 void _setupServices() {
@@ -54,6 +60,9 @@ void _setupServices() {
 
   getIt.registerSingleton<CartaAceptacionService>(
     CartaAceptacionServiceImplementation(getIt<ApiClient>()),
+  );
+  getIt.registerSingleton<UserService>(
+    UserServiceImplementation(getIt<ApiClient>()),
   );
 }
 
@@ -104,5 +113,11 @@ void _setupCartasAceptacionViewModels() {
   );
   getIt.registerFactory<RegistrarCartaAceptacionViewModel>(
     () => RegistrarCartaAceptacionViewModel(getIt<CartaAceptacionService>()),
+  );
+}
+
+void _setupOtherViewModels() {
+  getIt.registerFactory<ListarUsersViewModel>(
+    () => ListarUsersViewModel(getIt<UserService>()),
   );
 }

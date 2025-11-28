@@ -27,6 +27,9 @@ import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewm
 import 'package:sigde/viewmodels/carta_aceptacion/ver_carta_aceptacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_aceptacion/registrar_carta_aceptacion_viewmodel.dart';
 
+// ViewModels comunes
+import 'package:sigde/viewmodels/user/listar_users_viewmodel.dart';
+
 class AppProviders {
   // PROVIDERS GLOBALES
   static List<ChangeNotifierProvider<ChangeNotifier>> get globalProviders => [
@@ -95,6 +98,13 @@ class AppProviders {
     ),
   ];
 
+  // PROVIDERS COMUNES A VARIAS PANTALLAS
+  static List<ChangeNotifierProvider<ChangeNotifier>> get commonProviders => [
+    ChangeNotifierProvider<ListarUsersViewModel>(
+      create: (_) => getIt<ListarUsersViewModel>(),
+    ),
+  ];
+
   // PROVIDERS ESPECIFICOS POR PANTALLA
   // ESTADIA
   // Pantalla: Listar Estadías
@@ -113,6 +123,9 @@ class AppProviders {
   get registrarEstadiaProviders => [
     ChangeNotifierProvider<RegistrarEstadiaViewModel>(
       create: (_) => getIt<RegistrarEstadiaViewModel>(),
+    ),
+    ChangeNotifierProvider<ListarUsersViewModel>(
+      create: (_) => getIt<ListarUsersViewModel>(),
     ),
   ];
 

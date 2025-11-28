@@ -5,7 +5,7 @@ import 'components/sidebar/sidebar.dart';
 import 'components/home_content.dart';
 import 'components/profile_content.dart';
 import 'components/settings_content.dart';
-import 'package:sigde/models/user.dart';
+import 'package:sigde/models/user/user.dart';
 import 'package:sigde/views/estadia/listar_estadias_view.dart';
 import 'package:sigde/views/carta_presentacion/listar_cartas_presentacion_view.dart';
 import 'package:sigde/views/carta_aceptacion/listar_cartas_aceptacion_view.dart';

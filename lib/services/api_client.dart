@@ -169,7 +169,7 @@ class ApiClient {
   }
 
   // MÉTODO ESPECÍFICO PARA CARTA DE ACEPTACIÓN
-  Future<dynamic> postCartaAceptacion(
+  Future<Map<String, dynamic>> postCartaAceptacion(
     String path, {
     required Map<String, dynamic> cartaData,
     File? archivo,
@@ -180,36 +180,32 @@ class ApiClient {
     try {
       final formData = FormData();
 
-      // Agregar campos de la carta
       formData.fields.addAll([
         MapEntry('estadia_id', cartaData['estadia_id'].toString()),
         MapEntry('fecha_recepcion', cartaData['fecha_recepcion']),
         MapEntry('observaciones', cartaData['observaciones']),
       ]);
 
-      // Agregar archivo si existe
       if (archivo != null) {
         final fileName = archivo.path.split('/').last;
 
         formData.files.add(
           MapEntry(
-            'ruta_documento', // Nombre del campo que espera tu API
+            'ruta_documento',
             await MultipartFile.fromFile(archivo.path, filename: fileName),
           ),
         );
       }
 
-      final options = Options(headers: {...?headers});
-
       final response = await _dio.post(
         path,
         data: formData,
-        options: options,
+        options: Options(headers: {...?headers}),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
       );
 
-      return response.data;
+      return response.data as Map<String, dynamic>;
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

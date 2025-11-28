@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:sigde/models/auth/register_request.dart';
-import 'package:sigde/models/user.dart';
+import 'package:sigde/models/user/user.dart';
 import 'package:sigde/services/auth/auth_register_service.dart';
 import 'package:sigde/services/auth/secure_storage_service.dart';
 

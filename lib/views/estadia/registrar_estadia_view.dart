@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:sigde/utils/provider_helpers.dart';
 import 'package:sigde/models/estadia/registrar_estadia_request.dart';
 import 'package:sigde/viewmodels/estadia/registrar_estadia_viewmodel.dart';
+import 'package:sigde/viewmodels/user/listar_users_viewmodel.dart';
+import 'package:sigde/models/user/user.dart';
 
 class RegistrarEstadiaView extends StatelessWidget {
   final String token;
@@ -43,6 +45,9 @@ class _RegistrarEstadiaViewContentState
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ListarUsersViewModel>().listarUsers();
+    });
   }
 
   @override
@@ -174,21 +179,43 @@ class _RegistrarEstadiaViewContentState
                   ],
 
                   // Campo: ID Alumno
-                  _buildTextField(
-                    controller: _alumnoIdController,
-                    label: 'ID Alumno',
-                    hintText: 'Ingrese el ID del alumno',
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese el ID del alumno';
+                  Consumer<ListarUsersViewModel>(
+                    builder: (context, vm, child) {
+                      if (vm.isLoading) {
+                        return const CircularProgressIndicator();
                       }
-                      if (int.tryParse(value) == null) {
-                        return 'Ingrese un número válido';
+
+                      if (vm.hasError) {
+                        return Text("Error: ${vm.errorMessage}");
                       }
-                      return null;
+
+                      return DropdownButtonFormField<User>(
+                        decoration: const InputDecoration(
+                          labelText: "Alumno",
+                          border: OutlineInputBorder(),
+                        ),
+                        value: vm.usuarioSeleccionado,
+                        items: vm.users.map((user) {
+                          return DropdownMenuItem(
+                            value: user,
+                            child: Text(
+                              "${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}",
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          vm.seleccionarUsuario(value);
+                          // Guardar el ID en tu controlador actual
+                          _alumnoIdController.text = value?.id.toString() ?? "";
+                        },
+                        validator: (value) {
+                          if (value == null) return "Seleccione un alumno";
+                          return null;
+                        },
+                      );
                     },
                   ),
+
                   const SizedBox(height: 16),
 
                   // Campo: ID Docente
