@@ -2,6 +2,7 @@ import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
 import 'package:sigde/models/carta_presentacion/ver_carta_presentacion_request.dart';
 import 'package:sigde/models/carta_presentacion/registrar_carta_presentacion_request.dart';
 import 'package:sigde/models/carta_presentacion/firmar_carta_presentacion_request.dart';
+import 'dart:typed_data';
 
 abstract class CartaPresentacionService {
   Future<List<CartaPresentacion>> listarCartasPresentacion(String token);
@@ -17,4 +18,5 @@ abstract class CartaPresentacionService {
     FirmarCartaPresentacionRequest request,
     String token,
   );
+  Future<Uint8List?> descargarCartaPresentacion(int cartaId, String token);
 }

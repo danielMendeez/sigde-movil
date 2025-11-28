@@ -1,5 +1,4 @@
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:sigde/utils/provider_helpers.dart';
 import 'package:sigde/models/carta_presentacion/registrar_carta_presentacion_request.dart';
@@ -84,15 +83,9 @@ class _RegistrarCartaPresentacionViewContentState
         tutorId: int.parse(_tutorIdController.text),
       );
 
-      print('Enviando solicitud: ${request.toJson()}');
-
       final success = await viewModel.registrarCartaPresentacion(
         request,
         _token,
-      );
-      // 'success' es un bool, no tiene toJson(); registrar ambos valores booleanos para depuración.
-      print(
-        'Éxito en el registro: success=$success, viewModel.success=${viewModel.success}',
       );
 
       if (success && viewModel.success) {

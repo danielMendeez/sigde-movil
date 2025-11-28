@@ -4,6 +4,9 @@ import 'package:sigde/services/api_client.dart';
 import 'package:sigde/services/carta_presentacion/carta_presentacion_service.dart';
 import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
 import 'package:sigde/models/carta_presentacion/ver_carta_presentacion_request.dart';
+import 'package:sigde/models/carta_presentacion/descargar_carta_presentacion_request.dart';
+import 'package:dio/dio.dart';
+import 'dart:typed_data';
 
 class CartaPresentacionException implements Exception {
   final String message;
@@ -125,6 +128,35 @@ class CartaPresentacionServiceImplementation
       throw CartaPresentacionException(
         'Error al firmar carta de presentación: ${e.toString()}',
       );
+    }
+  }
+
+  @override
+  Future<Uint8List> descargarCartaPresentacion(
+    int cartaId,
+    String token,
+  ) async {
+    try {
+      final request = DescargarCartaPresentacionRequest(id: cartaId);
+
+      final response = await _apiClient.post(
+        '/carta-pres/descargarCarta',
+        data: request.toJson(),
+        headers: {'Authorization': 'Bearer $token'},
+        responseType: ResponseType.bytes,
+      );
+
+      if (response == null) {
+        throw Exception('El servidor no devolvió datos');
+      }
+
+      if (response is Uint8List) return response;
+
+      if (response is List<int>) return Uint8List.fromList(response);
+
+      throw Exception('Formato desconocido al descargar el PDF');
+    } catch (e) {
+      throw Exception('Error al descargar PDF: $e');
     }
   }
 }

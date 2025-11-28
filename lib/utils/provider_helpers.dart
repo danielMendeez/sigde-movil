@@ -20,6 +20,7 @@ import 'package:sigde/viewmodels/carta_presentacion/listar_cartas_presentacion_v
 import 'package:sigde/viewmodels/carta_presentacion/ver_carta_presentacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_presentacion/registrar_carta_presentacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_presentacion/firmar_carta_presentacion_viewmodel.dart';
+import 'package:sigde/viewmodels/carta_presentacion/descargar_carta_presentacion_viewmodel.dart';
 
 // ViewModels de Carta de Aceptación
 import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewmodel.dart';
@@ -72,6 +73,9 @@ class AppProviders {
     ),
     ChangeNotifierProvider<FirmarCartaPresentacionViewModel>(
       create: (_) => getIt<FirmarCartaPresentacionViewModel>(),
+    ),
+    ChangeNotifierProvider<DescargarCartaPresentacionViewModel>(
+      create: (_) => getIt<DescargarCartaPresentacionViewModel>(),
     ),
   ];
 
@@ -132,6 +136,9 @@ class AppProviders {
     ),
     ChangeNotifierProvider<FirmarCartaPresentacionViewModel>(
       create: (_) => getIt<FirmarCartaPresentacionViewModel>(),
+    ),
+    ChangeNotifierProvider<DescargarCartaPresentacionViewModel>(
+      create: (_) => getIt<DescargarCartaPresentacionViewModel>(),
     ),
   ];
 

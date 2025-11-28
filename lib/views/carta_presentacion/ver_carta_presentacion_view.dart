@@ -3,8 +3,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:sigde/models/carta_presentacion/carta_presentacion.dart';
 import 'package:sigde/utils/provider_helpers.dart';
+import 'package:sigde/viewmodels/carta_presentacion/descargar_carta_presentacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_presentacion/ver_carta_presentacion_viewmodel.dart';
 import 'package:sigde/viewmodels/carta_presentacion/firmar_carta_presentacion_viewmodel.dart';
+import 'package:file_saver/file_saver.dart';
 
 class VerCartaPresentacionView extends StatelessWidget {
   final String token;
@@ -77,24 +79,40 @@ class _VerCartaPresentacionViewContentState
     viewModel.cargarCartaPresentacion(_token, widget.carta.id);
   }
 
-  void _descargarPDF() {
-    // Lógica para descargar/ver el PDF
-    if (widget.carta.rutaDocumento.isNotEmpty) {
-      // Aquí puedes implementar la descarga o visualización del PDF
-      // Por ejemplo: abrir el PDF en un visor o descargarlo
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Descargando PDF: ${widget.carta.rutaDocumento}'),
-          backgroundColor: Colors.green,
-        ),
+  void _descargarPDF() async {
+    try {
+      final viewModel = Provider.of<DescargarCartaPresentacionViewModel>(
+        context,
+        listen: false,
       );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No hay PDF disponible para descargar'),
-          backgroundColor: Colors.orange,
-        ),
+
+      final bytes = await viewModel.descargarCartaPresentacion(
+        widget.carta.id,
+        _token,
       );
+
+      if (bytes.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error al descargar el PDF')),
+        );
+        return;
+      }
+
+      // Guardar archivo usando FileSaver
+      final path = await FileSaver.instance.saveFile(
+        name: "carta_${widget.carta.id}",
+        bytes: bytes,
+        fileExtension: "pdf",
+        mimeType: MimeType.pdf,
+      );
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("PDF guardado en: $path")));
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
     }
   }
 

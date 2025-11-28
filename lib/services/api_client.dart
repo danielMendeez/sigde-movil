@@ -48,13 +48,17 @@ class ApiClient {
     }
   }
 
-  Future<Map<String, dynamic>> post(
+  Future<dynamic> post(
     String path, {
     dynamic data,
     Map<String, dynamic>? headers,
+    ResponseType responseType = ResponseType.json, // 👈 agregado
   }) async {
     try {
-      final options = Options(headers: headers);
+      final options = Options(
+        headers: headers,
+        responseType: responseType, // 👈 agregado
+      );
       final response = await _dio.post(path, data: data, options: options);
       return response.data;
     } on DioException catch (e) {
