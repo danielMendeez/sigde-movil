@@ -135,7 +135,7 @@ class Sidebar extends StatelessWidget {
     Widget optionsWidget;
 
     switch (user.tipoUsuario) {
-      case 'admin':
+      case 'admin' || 'director':
         optionsWidget = AdminSidebarOptions(
           viewModel: viewModel,
           selectedIndex: selectedIndex,

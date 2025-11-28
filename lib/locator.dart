@@ -29,6 +29,7 @@ import 'package:sigde/services/carta_aceptacion/carta_aceptacion_service_impleme
 
 // ViewModels - Carta de Aceptación
 import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewmodel.dart';
+import 'package:sigde/viewmodels/carta_aceptacion/ver_carta_aceptacion_viewmodel.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -96,5 +97,8 @@ void _setupCartaPresentacionViewModels() {
 void _setupCartasAceptacionViewModels() {
   getIt.registerFactory<ListarCartasAceptacionViewModel>(
     () => ListarCartasAceptacionViewModel(getIt<CartaAceptacionService>()),
+  );
+  getIt.registerFactory<VerCartaAceptacionViewModel>(
+    () => VerCartaAceptacionViewModel(getIt<CartaAceptacionService>()),
   );
 }

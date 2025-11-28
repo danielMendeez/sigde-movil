@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sigde/models/carta_aceptacion/carta_aceptacion.dart';
 import 'package:sigde/utils/provider_helpers.dart';
 import 'package:sigde/viewmodels/carta_aceptacion/listar_cartas_aceptacion_viewmodel.dart';
+import 'ver_carta_aceptacion_view.dart';
 
 class ListarCartasAceptacionView extends StatelessWidget {
   final String token;
@@ -49,15 +50,13 @@ class _ListarCartasAceptacionViewContentState
 
   void _verDetalleCarta(BuildContext context, CartaAceptacion carta) {
     // Navegar a vista de detalle
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => VerCartaAceptacionView(
-    //       token: _token,
-    //       carta: carta,
-    //     ),
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            VerCartaAceptacionView(token: _token, cartaId: carta),
+      ),
+    );
   }
 
   void _editarCarta(BuildContext context, CartaAceptacion carta) {
@@ -173,22 +172,6 @@ class _ListarCartasAceptacionViewContentState
             },
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navegar a vista de registrar carta
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => RegistrarCartaAceptacionView(
-          //       token: _token,
-          //     ),
-          //   ),
-          // );
-        },
-        backgroundColor: Colors.teal,
-        foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
       ),
     );
   }
