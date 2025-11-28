@@ -3,12 +3,14 @@ import 'package:sigde/models/auth/register_request.dart';
 import 'package:sigde/models/user/user.dart';
 import 'package:sigde/services/auth/auth_register_service.dart';
 import 'package:sigde/services/auth/secure_storage_service.dart';
+import 'package:sigde/utils/sanitizer.dart';
 
 class RegisterViewModel extends ChangeNotifier {
   final AuthRegisterService _authRegisterService = AuthRegisterService();
 
   bool _isLoading = false;
   String? _errorMessage;
+
   String? _nombreError;
   String? _apellidoPaternoError;
   String? _apellidoMaternoError;
@@ -22,6 +24,7 @@ class RegisterViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+
   String? get nombreError => _nombreError;
   String? get apellidoPaternoError => _apellidoPaternoError;
   String? get apellidoMaternoError => _apellidoMaternoError;
@@ -33,7 +36,7 @@ class RegisterViewModel extends ChangeNotifier {
   String? get tipoUsuarioError => _tipoUsuarioError;
   String? get passwordError => _passwordError;
 
-  // Métodos para limpiar errores específicos
+  // Métodos para limpiar errores
   void clearNombreError() {
     _nombreError = null;
     notifyListeners();
@@ -99,7 +102,9 @@ class RegisterViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Validación del formulario
+  // ---------------------------
+  // VALIDACIÓN + SANITIZACIÓN
+  // ---------------------------
   bool validateForm({
     required String nombre,
     required String apellidoPaterno,
@@ -116,108 +121,95 @@ class RegisterViewModel extends ChangeNotifier {
 
     bool isValid = true;
 
+    // Sanitizar todo
+    nombre = sanitizeInput(nombre);
+    apellidoPaterno = sanitizeInput(apellidoPaterno);
+    apellidoMaterno = sanitizeInput(apellidoMaterno);
+    curp = sanitizeInput(curp.toUpperCase());
+    numSeguridadSocial = sanitizeInput(numSeguridadSocial);
+    matricula = sanitizeInput(matricula);
+    correo = sanitizeInput(correo.toLowerCase());
+    telefono = sanitizeInput(telefono);
+    tipoUsuario = sanitizeInput(tipoUsuario);
+    password = sanitizeInput(password);
+
+    // REGEX SEGUROS
+    final letters = RegExp(r"^[a-zA-ZÀ-ÿ\s]{2,40}$");
+    final curpRegExp = RegExp(r"^[A-Z]{4}\d{6}[HM][A-Z]{5}\d{2}$");
+    final nssRegExp = RegExp(r"^\d{11}$");
+    final matriculaRegExp = RegExp(r"^[A-Za-z0-9-]{4,20}$");
+    final emailRegExp = RegExp(r"^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}$");
+    final phoneRegExp = RegExp(r"^\d{10}$");
+    final passwordRegExp = RegExp(
+      r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{12,}$',
+    );
+
     // Validar nombre
-    if (nombre.isEmpty) {
-      _nombreError = 'Por favor ingresa tu nombre';
+    if (!letters.hasMatch(nombre)) {
+      _nombreError = "Ingresa un nombre válido";
       isValid = false;
     }
 
-    // Validar apellido paterno
-    if (apellidoPaterno.isEmpty) {
-      _apellidoPaternoError = 'Por favor ingresa tu apellido paterno';
+    if (!letters.hasMatch(apellidoPaterno)) {
+      _apellidoPaternoError = "Ingresa un apellido paterno válido";
       isValid = false;
     }
 
-    // Validar apellido materno
-    if (apellidoMaterno.isEmpty) {
-      _apellidoMaternoError = 'Por favor ingresa tu apellido materno';
+    if (!letters.hasMatch(apellidoMaterno)) {
+      _apellidoMaternoError = "Ingresa un apellido materno válido";
       isValid = false;
     }
 
-    // Validar CURP
-    if (curp.isEmpty) {
-      _curpError = 'Por favor ingresa tu CURP';
-      isValid = false;
-    } else if (curp.length != 18) {
-      _curpError = 'La CURP debe tener exactamente 18 caracteres';
+    // CURP
+    if (!curpRegExp.hasMatch(curp)) {
+      _curpError = "CURP inválida";
       isValid = false;
     }
 
-    // Validar número de seguridad social
-    if (numSeguridadSocial.isEmpty) {
-      _numSeguridadSocialError =
-          'Por favor ingresa tu número de seguridad social';
-      isValid = false;
-    } else if (numSeguridadSocial.length != 18) {
-      _numSeguridadSocialError =
-          'El número de seguridad social debe tener exactamente 18 caracteres';
-      isValid = false;
-    } else {
-      final nssRegex = RegExp(r'^[0-9]{18}$');
-      if (!nssRegex.hasMatch(numSeguridadSocial)) {
-        _numSeguridadSocialError =
-            'El número de seguridad social debe contener solo números';
-        isValid = false;
-      }
-    }
-
-    // Validar matrícula
-    if (matricula.isEmpty) {
-      _matriculaError = 'Por favor ingresa tu matrícula';
-      isValid = false;
-    } else if (matricula.length != 10) {
-      _matriculaError = 'La matrícula debe tener exactamente 10 caracteres';
-      isValid = false;
-    } else {
-      final matriculaRegex = RegExp(r'^[0-9]{10}$');
-      if (!matriculaRegex.hasMatch(matricula)) {
-        _matriculaError = 'La matrícula debe contener solo números';
-        isValid = false;
-      }
-    }
-
-    // Validar correo
-    if (correo.isEmpty) {
-      _correoError = 'Por favor ingresa tu correo electrónico';
-      isValid = false;
-    } else if (!_isValidEmail(correo)) {
-      _correoError = 'Por favor ingresa un correo electrónico válido';
+    // NSS
+    if (!nssRegExp.hasMatch(numSeguridadSocial)) {
+      _numSeguridadSocialError = "El NSS debe tener 11 números";
       isValid = false;
     }
 
-    // Validar teléfono
-    if (telefono.isEmpty || telefono.length != 10) {
-      _telefonoError = 'El teléfono debe tener 10 dígitos';
+    // Matrícula
+    if (!matriculaRegExp.hasMatch(matricula)) {
+      _matriculaError = "Matrícula inválida";
       isValid = false;
     }
 
-    // Validar tipo de usuario
+    // Email
+    if (!emailRegExp.hasMatch(correo)) {
+      _correoError = "Correo electrónico inválido";
+      isValid = false;
+    }
+
+    // Teléfono
+    if (!phoneRegExp.hasMatch(telefono)) {
+      _telefonoError = "El teléfono debe tener 10 dígitos";
+      isValid = false;
+    }
+
+    // Tipo usuario
     if (tipoUsuario.isEmpty) {
-      _tipoUsuarioError = 'Por favor selecciona tu tipo de usuario';
+      _tipoUsuarioError = "Selecciona un tipo de usuario";
       isValid = false;
     }
 
-    // Validar contraseña
-    if (password.isEmpty) {
-      _passwordError = 'Por favor ingresa tu contraseña';
-      isValid = false;
-    } else if (password.length < 12) {
-      _passwordError = 'La contraseña debe tener al menos 12 caracteres';
+    // Password
+    if (!passwordRegExp.hasMatch(password)) {
+      _passwordError =
+          "La contraseña debe tener mínimo 12 caracteres, mayúscula, minúscula, número y símbolo";
       isValid = false;
     }
 
-    if (!isValid) {
-      notifyListeners();
-    }
-
+    notifyListeners();
     return isValid;
   }
 
-  bool _isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
-  }
-
+  // ---------------------------
+  // REGISTRO
+  // ---------------------------
   Future<User?> register({
     required String nombre,
     required String apellidoPaterno,
@@ -230,7 +222,6 @@ class RegisterViewModel extends ChangeNotifier {
     required String tipoUsuario,
     required String password,
   }) async {
-    // Primero validar el formulario
     if (!validateForm(
       nombre: nombre,
       apellidoPaterno: apellidoPaterno,
@@ -247,30 +238,26 @@ class RegisterViewModel extends ChangeNotifier {
     }
 
     _isLoading = true;
-    _errorMessage = null;
     notifyListeners();
 
     try {
       final registerRequest = RegisterRequest(
-        nombre: nombre,
-        apellidoPaterno: apellidoPaterno,
-        apellidoMaterno: apellidoMaterno,
-        curp: curp,
-        numSeguridadSocial: numSeguridadSocial,
-        correo: correo,
-        matricula: matricula,
-        telefono: telefono,
-        tipoUsuario: tipoUsuario,
+        nombre: sanitizeInput(nombre),
+        apellidoPaterno: sanitizeInput(apellidoPaterno),
+        apellidoMaterno: sanitizeInput(apellidoMaterno),
+        curp: sanitizeInput(curp),
+        numSeguridadSocial: sanitizeInput(numSeguridadSocial),
+        correo: sanitizeInput(correo),
+        matricula: sanitizeInput(matricula),
+        telefono: sanitizeInput(telefono),
+        tipoUsuario: sanitizeInput(tipoUsuario),
         password: password,
       );
 
       final user = await _authRegisterService.register(registerRequest);
 
-      if (user != null) {
-        // Guardar token de sesión sólo si viene en la respuesta
-        if (user.token.isNotEmpty) {
-          await SecureStorageService.saveToken(user.token);
-        }
+      if (user != null && user.token.isNotEmpty) {
+        await SecureStorageService.saveToken(user.token);
         await SecureStorageService.saveUser(user);
       }
 
@@ -279,7 +266,7 @@ class RegisterViewModel extends ChangeNotifier {
       return user;
     } catch (e) {
       _isLoading = false;
-      _errorMessage = e.toString().replaceAll('Exception: ', '');
+      _errorMessage = e.toString().replaceAll("Exception: ", "");
       notifyListeners();
       return null;
     }

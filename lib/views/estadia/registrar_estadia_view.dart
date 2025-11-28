@@ -9,6 +9,7 @@ import 'package:sigde/viewmodels/empresa/listar_empresas_viewmodel.dart';
 import 'package:sigde/models/empresa/empresa.dart';
 import 'package:sigde/viewmodels/carrera/listar_carreras_viewmodel.dart';
 import 'package:sigde/models/carrera/carrera.dart';
+import 'package:sigde/utils/sanitizer.dart';
 
 class RegistrarEstadiaView extends StatelessWidget {
   final String token;
@@ -83,6 +84,16 @@ class _RegistrarEstadiaViewContentState
   }
 
   void _enviarFormulario() async {
+    _alumnoIdController.text = sanitizeNumber(_alumnoIdController.text);
+    _empresaIdController.text = sanitizeNumber(_empresaIdController.text);
+    _carreraIdController.text = sanitizeNumber(_carreraIdController.text);
+    _tutorIdController.text = sanitizeNumber(_tutorIdController.text);
+    _asesorExternoController.text = sanitizeName(_asesorExternoController.text);
+    _proyectoNombreController.text = sanitizeText(
+      _proyectoNombreController.text,
+    );
+    _apoyoController.text = sanitizeNumber(_apoyoController.text);
+
     if (_formKey.currentState!.validate()) {
       final viewModel = context.read<RegistrarEstadiaViewModel>();
 
@@ -92,8 +103,8 @@ class _RegistrarEstadiaViewContentState
         empresaId: int.parse(_empresaIdController.text),
         carreraId: int.parse(_carreraIdController.text),
         tutorId: int.parse(_tutorIdController.text),
-        asesorExterno: _asesorExternoController.text,
-        proyectoNombre: _proyectoNombreController.text,
+        asesorExterno: sanitizeName(_asesorExternoController.text),
+        proyectoNombre: sanitizeText(_proyectoNombreController.text),
         apoyo: int.parse(_apoyoController.text),
       );
 
