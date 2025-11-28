@@ -177,10 +177,17 @@ class AppProviders {
     ),
   ];
 
+  // Pantalla: Registrar carta de presentación
   static List<ChangeNotifierProvider<ChangeNotifier>>
   get registrarCartaPresentacionProviders => [
     ChangeNotifierProvider<RegistrarCartaPresentacionViewModel>(
       create: (_) => getIt<RegistrarCartaPresentacionViewModel>(),
+    ),
+    ChangeNotifierProvider<ListarUsersViewModel>(
+      create: (_) => getIt<ListarUsersViewModel>(),
+    ),
+    ChangeNotifierProvider<ListarEstadiasViewModel>(
+      create: (_) => getIt<ListarEstadiasViewModel>(),
     ),
   ];
 

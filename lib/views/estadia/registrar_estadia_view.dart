@@ -45,6 +45,7 @@ class _RegistrarEstadiaViewContentState
   final _asesorExternoController = TextEditingController();
   final _proyectoNombreController = TextEditingController();
   final _apoyoController = TextEditingController();
+  int? _apoyoValue;
 
   @override
   void initState() {
@@ -366,20 +367,7 @@ class _RegistrarEstadiaViewContentState
                   const SizedBox(height: 16),
 
                   // Campo: Apoyo
-                  _buildTextField(
-                    controller: _apoyoController,
-                    label: 'Tipo de Apoyo',
-                    hintText:
-                        'Describa el tipo de apoyo', // 1 = si hay apoyo, 0 = no hay apoyo
-                    keyboardType: TextInputType.number,
-                    maxLines: 3,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor ingrese el tipo de apoyo';
-                      }
-                      return null;
-                    },
-                  ),
+                  _buildSupportRadio(),
                   const SizedBox(height: 16),
 
                   // Botón de enviar
@@ -390,6 +378,78 @@ class _RegistrarEstadiaViewContentState
           );
         },
       ),
+    );
+  }
+
+  Widget _buildSupportRadio() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '¿Recibirás algún apoyo?',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[700],
+          ),
+        ),
+        SizedBox(height: 8),
+        Row(
+          children: [
+            // Opción: Sí
+            Expanded(
+              child: RadioListTile<int>(
+                title: Text('Sí'),
+                value: 1,
+                groupValue: _apoyoValue,
+                onChanged: (value) {
+                  setState(() {
+                    _apoyoValue = value;
+                    _apoyoController.text = value.toString();
+                  });
+                },
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+              ),
+            ),
+            // Opción: No
+            Expanded(
+              child: RadioListTile<int>(
+                title: Text('No'),
+                value: 0,
+                groupValue: _apoyoValue,
+                onChanged: (value) {
+                  setState(() {
+                    _apoyoValue = value;
+                    _apoyoController.text = value.toString();
+                  });
+                },
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+              ),
+            ),
+          ],
+        ),
+        // // Mostrar campo adicional si selecciona "Sí"
+        // if (_apoyoValue == 1) ...[
+        //   SizedBox(height: 12),
+        //   _buildTextField(
+        //     controller:
+        //         _tipoApoyoController, // Necesitarás crear este controller
+        //     label: 'Tipo de apoyo',
+        //     hintText: 'Describa el tipo de apoyo que recibirá',
+        //     keyboardType: TextInputType.text,
+        //     maxLines: 3,
+        //     validator: (value) {
+        //       if (_apoyoValue == 1 && (value == null || value.isEmpty)) {
+        //         return 'Por favor describa el tipo de apoyo';
+        //       }
+        //       return null;
+        //     },
+        //   ),
+        // ],
+        SizedBox(height: 16),
+      ],
     );
   }
 

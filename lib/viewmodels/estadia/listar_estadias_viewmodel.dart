@@ -8,11 +8,13 @@ class ListarEstadiasViewModel with ChangeNotifier {
   List<Estadia> _estadias = [];
   bool _isLoading = false;
   String _errorMessage = '';
+  Estadia? estadiaSeleccionada;
 
   List<Estadia> get estadias => _estadias;
   bool get isLoading => _isLoading;
   String get errorMessage => _errorMessage;
   bool get hasError => _errorMessage.isNotEmpty;
+  int? get selectedEstadiaId => estadiaSeleccionada?.id;
 
   ListarEstadiasViewModel(this._estadiaService);
 
@@ -57,5 +59,10 @@ class ListarEstadiasViewModel with ChangeNotifier {
       _estadias[index] = estadiaActualizada;
       notifyListeners();
     }
+  }
+
+  void seleccionarEstadia(Estadia? estadia) {
+    estadiaSeleccionada = estadia;
+    notifyListeners();
   }
 }

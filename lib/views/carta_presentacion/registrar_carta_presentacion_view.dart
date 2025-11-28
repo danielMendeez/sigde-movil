@@ -4,6 +4,10 @@ import 'package:sigde/utils/provider_helpers.dart';
 import 'package:sigde/models/carta_presentacion/registrar_carta_presentacion_request.dart';
 import 'package:sigde/viewmodels/carta_presentacion/registrar_carta_presentacion_viewmodel.dart';
 import 'package:provider/provider.dart';
+import 'package:sigde/models/user/user.dart';
+import 'package:sigde/viewmodels/user/listar_users_viewmodel.dart';
+import 'package:sigde/models/estadia/estadia.dart';
+import 'package:sigde/viewmodels/estadia/listar_estadias_viewmodel.dart';
 
 class RegistrarCartaPresentacionView extends StatelessWidget {
   final String token;
@@ -34,45 +38,27 @@ class _RegistrarCartaPresentacionViewContentState
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _estadiaIdController = TextEditingController();
-  final TextEditingController _tutorIdController = TextEditingController();
+  final TextEditingController _directorIdController = TextEditingController();
 
-  // Listas simuladas para los dropdowns (deberías reemplazarlas con tus datos reales)
-  final List<Map<String, dynamic>> _estadias = [
-    {'id': 1, 'nombre': 'Estadía en Desarrollo Móvil'},
-    {'id': 2, 'nombre': 'Estadía en Base de Datos'},
-    {'id': 3, 'nombre': 'Estadía en Inteligencia Artificial'},
-    {'id': 4, 'nombre': 'Estadía en Redes y Seguridad'},
-  ];
-
-  final List<Map<String, dynamic>> _tutores = [
-    {'id': 1, 'nombre': 'Dr. Juan Pérez'},
-    {'id': 2, 'nombre': 'Dra. María García'},
-    {'id': 3, 'nombre': 'Mtro. Carlos López'},
-    {'id': 4, 'nombre': 'Ing. Ana Martínez'},
-  ];
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ListarUsersViewModel>().cargarUsers();
+      context.read<ListarEstadiasViewModel>().cargarEstadias(_token);
+    });
+  }
 
   @override
   void dispose() {
     _estadiaIdController.dispose();
-    _tutorIdController.dispose();
+    _directorIdController.dispose();
     super.dispose();
   }
 
   void _clearForm() {
     _estadiaIdController.clear();
-    _tutorIdController.clear();
+    _directorIdController.clear();
   }
-
-  // Future<void> _seleccionarDocumento() async {
-  //   // Aquí implementarías la lógica para seleccionar un archivo
-  //   // Por ejemplo, usando file_picker o image_picker
-  //   // Por ahora simulamos la selección
-  //   setState(() {
-  //     _documentoSeleccionado =
-  //         'carta_presentacion_${DateTime.now().millisecondsSinceEpoch}.pdf';
-  //     _rutaDocumentoController.text = _documentoSeleccionado!;
-  //   });
-  // }
 
   void _enviarFormulario() async {
     if (_formKey.currentState!.validate()) {
@@ -80,7 +66,7 @@ class _RegistrarCartaPresentacionViewContentState
 
       final request = RegistrarCartaPresentacionRequest(
         estadiaId: int.parse(_estadiaIdController.text),
-        tutorId: int.parse(_tutorIdController.text),
+        directorId: int.parse(_directorIdController.text),
       );
 
       final success = await viewModel.registrarCartaPresentacion(
@@ -120,39 +106,83 @@ class _RegistrarCartaPresentacionViewContentState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Selector de Estadía
-              _buildDropdownFormField(
-                label: 'Estadía',
-                controller: _estadiaIdController,
-                items: _estadias,
-                hint: 'Selecciona una estadía',
+              Consumer<ListarEstadiasViewModel>(
+                builder: (context, vm, child) {
+                  if (vm.isLoading) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  if (vm.hasError) {
+                    return Text("Error: ${vm.errorMessage}");
+                  }
+
+                  return DropdownButtonFormField<Estadia>(
+                    decoration: const InputDecoration(
+                      labelText: "Estadia",
+                      border: OutlineInputBorder(),
+                    ),
+                    value: vm.estadiaSeleccionada,
+                    items: vm.estadias.map((estadia) {
+                      return DropdownMenuItem(
+                        value: estadia,
+                        child: Text(
+                          "${estadia.proyectoNombre}", // ajusta campo si tu modelo usa otros nombres
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      vm.seleccionarEstadia(value);
+                      _estadiaIdController.text = value?.id.toString() ?? "";
+                    },
+                    validator: (value) {
+                      if (value == null) return "Seleccione una estadía";
+                      return null;
+                    },
+                  );
+                },
               ),
 
               const SizedBox(height: 16),
 
               // Selector de Tutor
-              _buildDropdownFormField(
-                label: 'Tutor',
-                controller: _tutorIdController,
-                items: _tutores,
-                hint: 'Selecciona un tutor',
+              Consumer<ListarUsersViewModel>(
+                builder: (context, vm, child) {
+                  if (vm.isLoading) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  if (vm.hasError) {
+                    return Text("Error: ${vm.errorMessage}");
+                  }
+
+                  return DropdownButtonFormField<User>(
+                    decoration: const InputDecoration(
+                      labelText: "Tutor",
+                      border: OutlineInputBorder(),
+                    ),
+                    value: vm.alumnoSeleccionado,
+                    items: vm.users.map((user) {
+                      return DropdownMenuItem(
+                        value: user,
+                        child: Text(
+                          "${user.nombre} ${user.apellidoPaterno} ${user.apellidoMaterno}",
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      vm.seleccionarAlumno(value);
+                      // Guardar el ID en tu controlador actual
+                      _directorIdController.text = value?.id.toString() ?? "";
+                    },
+                    validator: (value) {
+                      if (value == null) return "Seleccione un alumno";
+                      return null;
+                    },
+                  );
+                },
               ),
 
               const SizedBox(height: 16),
-
-              // // Selector de Fecha
-              // _buildDatePickerField(),
-
-              // const SizedBox(height: 16),
-
-              // // Checkbox para firma del director
-              // _buildCheckboxField(),
-
-              // const SizedBox(height: 16),
-
-              // // Selector de documento
-              // _buildDocumentPickerField(),
-
-              // const SizedBox(height: 32),
 
               // Botón de enviar
               _buildSubmitButton(),
@@ -202,98 +232,6 @@ class _RegistrarCartaPresentacionViewContentState
       ],
     );
   }
-
-  // Widget _buildDatePickerField() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       const Text(
-  //         'Fecha de Emisión',
-  //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-  //       ),
-  //       const SizedBox(height: 8),
-  //       InkWell(
-  //         onTap: () => _seleccionarFecha(context),
-  //         child: InputDecorator(
-  //           decoration: InputDecoration(
-  //             border: OutlineInputBorder(
-  //               borderRadius: BorderRadius.circular(8),
-  //             ),
-  //             suffixIcon: const Icon(Icons.calendar_today),
-  //           ),
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: [
-  //               Text(
-  //                 DateFormat('dd/MM/yyyy').format(_fechaEmision),
-  //                 style: const TextStyle(fontSize: 16),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget _buildCheckboxField() {
-  //   return Row(
-  //     children: [
-  //       Checkbox(
-  //         value: _firmadaDirector == 1,
-  //         onChanged: (value) {
-  //           setState(() {
-  //             _firmadaDirector = value! ? 1 : 0;
-  //           });
-  //         },
-  //       ),
-  //       const Expanded(
-  //         child: Text(
-  //           'Firmada por el Director',
-  //           style: TextStyle(fontSize: 16),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget _buildDocumentPickerField() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       const Text(
-  //         'Documento',
-  //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-  //       ),
-  //       const SizedBox(height: 8),
-  //       TextFormField(
-  //         controller: _rutaDocumentoController,
-  //         readOnly: true,
-  //         decoration: InputDecoration(
-  //           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-  //           hintText: 'Selecciona un documento',
-  //           suffixIcon: IconButton(
-  //             icon: const Icon(Icons.attach_file),
-  //             onPressed: _seleccionarDocumento,
-  //           ),
-  //         ),
-  //         validator: (value) {
-  //           if (value == null || value.isEmpty) {
-  //             return 'Por favor selecciona un documento';
-  //           }
-  //           return null;
-  //         },
-  //       ),
-  //       if (_documentoSeleccionado != null) ...[
-  //         const SizedBox(height: 8),
-  //         Text(
-  //           'Documento seleccionado: $_documentoSeleccionado',
-  //           style: const TextStyle(fontSize: 14, color: Colors.green),
-  //         ),
-  //       ],
-  //     ],
-  //   );
-  // }
 
   Widget _buildSubmitButton() {
     return SizedBox(

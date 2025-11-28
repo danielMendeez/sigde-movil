@@ -1,13 +1,13 @@
 class RegistrarCartaPresentacionRequest {
   final int estadiaId;
-  final int tutorId;
+  final int directorId;
 
   RegistrarCartaPresentacionRequest({
     required this.estadiaId,
-    required this.tutorId,
+    required this.directorId,
   });
 
   Map<String, dynamic> toJson() {
-    return {'estadia_id': estadiaId, 'tutor_id': tutorId};
+    return {'estadia_id': estadiaId, 'director_id': directorId};
   }
 }
